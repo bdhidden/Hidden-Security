@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./home.css"; 
 import { UseWidth } from "../contexts/WidthContext";
 import { UseTheme } from "../contexts/ThemeContext";
+import FloatingCardSection from "../floatingCard/FloatingCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,6 +96,7 @@ const Home = () => {
   }, [width]);
 
   return (
+    <>
     <div className="mask-page">
       <div className={`container ${theme}`} ref={containerRef}>
         
@@ -125,6 +127,8 @@ const Home = () => {
         </div>
       </div>
     </div>
+    <FloatingCardSection />
+    </>
   );
 };
 

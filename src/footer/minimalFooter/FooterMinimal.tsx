@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import "./footerMinimal.css";
 import { UseTheme } from "../../contexts/ThemeContext";
-import logo from "../../../public/logos/hidden-logo-sf.png"
+import logo from "/logos/hidden-logo-sf.png"
 
 const FooterMinimal = () => {
     const { theme } = UseTheme();

@@ -1,0 +1,326 @@
+.hc-scroll-wrapper {
+  width: 100%;
+  transition: background-color 0.4s ease;
+  padding-top: 6rem;
+}
+
+/* Colores de fondo de la sección */
+.hc-scroll-wrapper.dark { background-color: #000000; }
+.hc-scroll-wrapper.light { background-color: #ffffff; }
+
+.hc-scroll-area {
+  height: 400vh; /* Espacio para que el giro sea suave */
+}
+
+.hc-sticky-container {
+  position: sticky;
+  top: 50px;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; 
+  perspective: 2000px;
+  overflow: hidden;
+}
+
+/* --- CONTENEDOR DE CARTAS --- */
+.hc-cartas-container {
+  position: relative;
+  display: flex;
+  justify-content: center; /* Centra el eje del abanico */
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.hc-carta-wrap {
+  width: 280px;
+  height: 400px;
+  position: absolute; /* Vital para que el cálculo de X en JS funcione desde el centro */
+  border-radius: 20px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.hc-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  /* Asegúrate de que no haya padding o margin que desplace el contenido interno */
+  margin: 0; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hc-carta-reverso {
+  transform: rotateY(180deg);
+  justify-content: flex-start; /* El texto del reverso suele ir arriba */
+  align-items: flex-start;
+  padding: 30px;
+}
+
+/* --- DISTRIBUCIÓN INICIAL EN ABANICO --- */
+
+/* Carta 1 */
+.hc-carta-wrap:nth-child(1) {
+  transform: translateX(-420px) rotate(-10deg) translateY(30px);
+}
+
+/* Carta 2 */
+.hc-carta-wrap:nth-child(2) {
+  transform: translateX(-140px) rotate(-4deg) translateY(5px);
+}
+
+/* Carta 3 */
+.hc-carta-wrap:nth-child(3) {
+  transform: translateX(140px) rotate(4deg) translateY(5px);
+}
+
+/* Carta 4 */
+.hc-carta-wrap:nth-child(4) {
+  transform: translateX(420px) rotate(10deg) translateY(30px);
+}
+
+.hc-carta-inner-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* --- LAS CARAS (FRONT & BACK) --- */
+.hc-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+/* --- CARA FRONTAL (Logo) --- */
+.hc-carta-frente {
+  z-index: 2;
+  justify-content: center;
+  align-items: center;
+}
+
+.hc-logo-card {
+  width: 80%;
+  height: auto;
+  pointer-events: none;
+}
+
+/* --- CARA TRASERA (Data) --- */
+.hc-carta-reverso {
+  transform: rotateY(180deg); /* Oculta por defecto */
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.hc-titulo-reverso {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hc-lista-cursos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hc-lista-cursos li {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* ==========================================================================
+   LÓGICA DE COLORES SEGÚN TEMA
+   ========================================================================== */
+
+/* DARK MODE: Carta Blanca con acento Amarillo */
+.hc-scroll-wrapper.dark .hc-face {
+  background-color: #ffffff !important;
+  border: 1px solid #eeeeee;
+}
+.hc-scroll-wrapper.dark .hc-titulo-reverso { color: #000000; }
+.hc-scroll-wrapper.dark .hc-lista-cursos li { color: #333333; }
+.hc-scroll-wrapper.dark .hc-lista-cursos { border-top: 2px solid #ccff00; padding-top: 10px; }
+
+/* LIGHT MODE: Carta Negra con acento Naranja */
+.hc-scroll-wrapper.light .hc-face {
+  background-color: #0a0a0a !important;
+  border: 1px solid #222222;
+}
+.hc-scroll-wrapper.light .hc-titulo-reverso { color: #ff5500; }
+.hc-scroll-wrapper.light .hc-lista-cursos li { color: #dddddd; }
+.hc-scroll-wrapper.light .hc-lista-cursos { border-top: 2px solid #ff5500; padding-top: 10px; }
+
+.hc-reverso-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.hc-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  color: #888;
+}
+
+.hc-subtitulo-reverso {
+    font-family: "Montserrat";
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  font-weight: 400;
+  color: #313131; /* En modo Dark se verá gris suave */
+}
+
+/* Bullet decorativo */
+.hc-bullet {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: var(--accent-color);
+}
+
+.dark { --accent-color: #ccff00; }
+.light { --accent-color: #ff5500; }
+
+.hc-lista-cursos li {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+  padding: 10px 0;
+}
+
+/* Marca de agua decorativa en la carta */
+.hc-card-watermark {
+  position: absolute;
+  bottom: 5px;
+  right: 35px;
+  font-size: 4rem;
+  font-weight: 900;
+  opacity: 0.045;
+  pointer-events: none;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.hc-scroll-wrapper.light .hc-subtitulo-reverso { color: #aaa; }
+
+/* --- HEADER & TITULOS --- */
+.hc-header-content {
+  position: absolute;
+  top: 15%; /* Posicionado arriba de las cartas */
+  text-align: center;
+  z-index: 10;
+  pointer-events: none; /* Para que no bloquee el scroll */
+  width: 100%;
+  padding: 0 20px;
+}
+
+.hc-pre-title {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.hc-main-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem); /* Tamaño fluido */
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.hc-intro-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto 20rem auto;
+  line-height: 1.6;
+  color: white;
+}
+
+.hc-accent {
+  color: var(--accent-color);
+  transition: color 0.3s ease;
+}
+
+/* --- AJUSTES POR TEMA --- */
+.hc-scroll-wrapper.dark .hc-main-title { color: #ffffff; }
+.hc-scroll-wrapper.dark .hc-intro-text { color: #cccccc; }
+
+.hc-scroll-wrapper.light .hc-main-title { color: #000000; }
+.hc-scroll-wrapper.light .hc-intro-text { color: #444444; }
+
+/* Ajuste del contenedor de cartas para que no se pegue al título al inicio */
+.hc-cartas-container {
+  margin-top: 100px; /* Da espacio al título */
+}
+
+@media (max-width: 1024px) {
+  .hc-header-content {
+    top: 10%; /* Subimos un poco el título */
+  }
+
+  .hc-main-title {
+    font-size: 3rem;
+  }
+
+  /* Reducimos el tamaño de las cartas para que entren todas */
+  .hc-carta-wrap {
+    width: 240px;
+    height: 340px;
+  }
+
+  /* Ajustamos el abanico para que sea más cerrado y no desborde */
+  .hc-carta-wrap:nth-child(1) { transform: translateX(-350px) rotate(-8deg) translateY(20px); }
+  .hc-carta-wrap:nth-child(2) { transform: translateX(-120px) rotate(-3deg) translateY(5px); }
+  .hc-carta-wrap:nth-child(3) { transform: translateX(120px) rotate(3deg) translateY(5px); }
+  .hc-carta-wrap:nth-child(4) { transform: translateX(350px) rotate(8deg) translateY(20px); }
+
+  .hc-cartas-container {
+    margin-top: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+    .hc-pre-title{ margin-top: 1rem; font-size: 1rem; opacity:; }
+    .hc-main-title{ font-size: 2rem; }
+    .hc-header-content{
+        width: 95%;
+    }
+    .hc-intro-text{ width: 95%; font-size: 1rem; }
+}

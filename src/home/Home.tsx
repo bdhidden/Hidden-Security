@@ -5,6 +5,8 @@ import "./home.css";
 import { UseWidth } from "../contexts/WidthContext";
 import { UseTheme } from "../contexts/ThemeContext";
 import FloatingCardSection from "../floatingCard/FloatingCard";
+import LogoCarrousel from "../logoCarrousel/LogoCarrousel";
+import Mission from "../mision/Mission";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,7 +129,9 @@ const Home = () => {
         </div>
       </div>
     </div>
+    <Mission />
     <FloatingCardSection />
+    <LogoCarrousel />
     </>
   );
 };

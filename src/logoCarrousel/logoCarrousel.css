@@ -1,0 +1,140 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.hc-logo-section {
+  padding: 0px 0 100px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  overflow: hidden;
+  transition: background-color 0.4s ease;
+}
+
+/* Colores de fondo por tema */
+.hc-logo-section.dark {
+  background-color: #000000;
+}
+
+.hc-logo-section.light {
+  background-color: #ffffff;
+}
+
+/* --- ESTRUCTURA DEL MARQUEE --- */
+.hc-marquee-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+}
+
+.hc-marquee-inner {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.hc-marquee-set {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 80px; /* Espacio horizontal entre logos */
+  padding-right: 80px;
+  margin-bottom: 100px;
+}
+
+/* --- LÓGICA DE LOGOS POR TEMA --- */
+.hc-brand-logo {
+  height: 65px; /* Tamaño de los logos */
+  width: auto;
+  object-fit: contain;
+  transition: all 0.4s ease;
+  opacity: 0.6;
+}
+
+.hc-brand-logo:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* MODO DARK: Logos blancos (Invertimos colores si son negros originalmente) */
+.hc-logo-section.dark .hc-brand-logo {
+  filter: brightness(0) invert(1); 
+}
+
+/* MODO LIGHT: Logos negros o grises oscuros */
+.hc-logo-section.light .hc-brand-logo {
+  filter: brightness(0); /* Los hace completamente negros */
+}
+
+/* --- HEADER DE LOGOS --- */
+.hc-logos-header {
+    text-align: center;
+    margin-bottom: 80px; /* Espacio antes de que empiecen los logos */
+    padding: 0 20px;
+}
+
+.hc-logos-subtitle {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+    color: #888;
+}
+
+.hc-logos-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Colores dinámicos para el título */
+.hc-logo-section.dark .hc-logos-title { color: #ffffff; }
+.hc-logo-section.light .hc-logos-title { color: #1a1a1a; }
+
+.hc-logos-accent {
+    color: var(--accent-color); /* Usamos las variables que definimos antes */
+}
+
+.hc-logos-divider {
+    width: 60px;
+    height: 4px;
+    background-color: var(--accent-color);
+    margin: 25px auto 0;
+    border-radius: 2px;
+}
+
+/* --- AJUSTE DE CONTENEDOR --- */
+.hc-marquees-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Espacio entre las 3 tiras de logos */
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .hc-logos-header {
+        margin-bottom: 50px;
+      }
+      .hc-logos-title {
+        font-size: 1.8rem;
+      }
+      
+    .hc-marquee-set {
+      margin-bottom: 20px;
+    }  
+      
+    .hc-logo-section {
+      padding: 60px 0;
+      gap: 40px;
+    }
+
+    .hc-brand-logo {
+      height: 40px; /* Más pequeños en móvil */
+    }
+
+    .hc-marquee-set {
+      gap: 40px;
+      padding-right: 40px;
+    }
+}

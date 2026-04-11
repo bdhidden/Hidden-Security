@@ -1,0 +1,212 @@
+/* mission.css */
+
+.hc-mission-section {
+    padding: 120px 20px;
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.4s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- VARIACIONES DE TEMA --- */
+.hc-mission-section.dark {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.hc-mission-section.light {
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
+.hc-mission-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- CABECERA --- */
+.hc-mission-header {
+    text-align: center;
+    margin-bottom: 120px;
+}
+
+.hc-mission-main-title {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+}
+
+.hc-mission-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.6;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- TIMELINE WRAPPER --- */
+.hc-timeline-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 150px; /* Espacio entre hitos */
+    padding-bottom: 50px;
+}
+
+/* Línea Vertical Estilizada */
+.hc-timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--accent-color) 15%,
+        var(--accent-color) 85%,
+        transparent 100%
+    );
+    transform: translateX(-50%);
+    opacity: 0.3;
+}
+
+.hc-timeline-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- EL PUNTO (DOT) --- */
+.hc-timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    z-index: 5;
+    box-shadow: 0 0 20px var(--accent-color);
+}
+
+.hc-dot-inner {
+    position: absolute;
+    inset: -6px;
+    border: 1px solid var(--accent-color);
+    border-radius: 50%;
+    animation: hc-pulse 2.5s infinite;
+}
+
+@keyframes hc-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* --- CONTENIDO DE LOS PASOS --- */
+.hc-timeline-content {
+    width: 42%;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+/* Alternancia izquierda/derecha */
+.hc-timeline-content.left {
+    text-align: right;
+    margin-right: 58%;
+}
+
+.hc-timeline-content.right {
+    text-align: left;
+    margin-left: 58%;
+}
+
+.hc-step-tag {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--accent-color);
+    margin-bottom: 12px;
+    display: block;
+    text-transform: uppercase;
+}
+
+.hc-step-title {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.hc-step-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 400;
+    opacity: 0.7;
+    margin: 0;
+}
+
+/* Ajustes de color por tema para textos secundarios */
+.hc-mission-section.dark .hc-step-desc { color: #cccccc; }
+.hc-mission-section.light .hc-step-desc { color: #444444; }
+
+/* --- RESPONSIVE (Mobile 768px) --- */
+@media (max-width: 768px) {
+    .hc-mission-header {
+        margin-bottom: 60px;
+    }
+
+    .hc-timeline-line {
+        left: 20px;
+        transform: none;
+    }
+
+    .hc-timeline-dot {
+        left: 20px;
+        transform: translateX(-50%);
+    }
+
+    .hc-timeline-wrapper {
+        gap: 80px;
+    }
+
+    .hc-timeline-content {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+
+    .hc-step-title {
+        font-size: 1.6rem;
+    }
+
+    .hc-mission-main-title {
+        font-size: 2.3rem;
+        letter-spacing: -1px;
+    }
+    .hc-mission-subtitle{ font-size: 0.8rem; }
+}
+
+/* Efecto de decoración opcional (Marca de agua de fondo) */
+.hc-mission-section::before {
+    content: "MISSION";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20vw;
+    font-weight: 900;
+    opacity: 0.09;
+    pointer-events: none;
+    z-index: 0;
+}

@@ -13,10 +13,10 @@ const Pricing = () => {
     }, []);
 
     const studentPlans = [
-        { title: "STARTER", price: "80.000", period: "3 MESES", features: ["Acceso completo al curso", "Material descargable", "Certificado de cursada"], label: "01 // TRAINING" },
-        { title: "PRO", price: "250.000", period: "6 MESES", features: ["1 Voucher de examen incluido", "Acceso a laboratorios", "Soporte prioritario"], label: "02 // MOST_WANTED", highlight: true },
-        { title: "ELITE", price: "350.000", period: "12 MESES", features: ["Beneficio de Re-intento", "Mentorship 1-to-1", "Acceso a Red de Empleo"], label: "03 // FULL_STACK" },
-        { title: "VOUCHER", price: "180.000", period: "UNICO", features: ["Derecho a examen final", "Certificación oficial", "Validez internacional"], label: "04 // CERT" }
+        { title: "STARTER", price: "80.000", period: "3 MESES DISPONIBLES", features: ["Acceso completo al curso", "Material descargable", "Certificado de cursada"], label: "01 - TRAINING" },
+        { title: "PRO", price: "250.000", period: "6 MESES DISPONIBLES", features: ["1 Voucher de examen incluido", "Acceso a laboratorios", "Soporte prioritario"], label: "02 - BEST_SELLER", highlight: true },
+        { title: "ELITE", price: "350.000", period: "12 MESES DISPONIBLES", features: ["Beneficio de Re-intento", "Mentorship 1-to-1", "Acceso a Red de Empleo"], label: "03 - FULL_STACK" },
+        { title: "VOUCHER", price: "180.000", period: "UNICO USO", features: ["Derecho a examen final", "Certificación oficial", "Validez internacional"], label: "04 - CERTIFICATION" }
     ];
 
     const businessPlans = [
@@ -90,7 +90,7 @@ const Pricing = () => {
                                         <span className="currency">ARS</span>
                                         <span className="amount">{plan.price}</span>
                                     </div>
-                                    <span className="plan-period Montserrat-700">/ {plan.period}</span>
+                                    <span className="plan-period Montserrat-700">// {plan.period}</span>
                                 </div>
                                 
                                 <ul className="plan-features">

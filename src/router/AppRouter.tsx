@@ -11,6 +11,7 @@ import Courses from "../courses/relativeRoutes/Courses";
 import Contact from "../contact/Contact";
 import Pricing from "../pricing/Pricing";
 import { LusionMinimal } from "../lusion/LusionMinimal";
+import LusionPricing from "../pricing/LusionPricing";
 
 const AppRouter = () => {
     return (
@@ -28,7 +29,7 @@ const AppRouter = () => {
                                 <Route path="/courses-info" element={<CursosParams />} />
                                 <Route path="/courses-info/:courseSlug" element={<Courses />} />
                                 <Route path="/contact" element={<Contact />} />
-                                <Route path="/pricing" element={<Pricing />} />
+                                <Route path="/pricing" element={<LusionPricing />} />
                                 {/* <Route path="/products" element={<ProductsMinimal />} />
                                 <Route path="/sales" element={<Sales />} />
                                 <Route path="/contact" element={<ContactMinimal />} />

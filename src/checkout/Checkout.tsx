@@ -121,7 +121,7 @@ const Checkout = () => {
         return totalConInteres - discount;
 
     }, [totalConInteres, appliedCoupon, selectedPlan, voucherAdded]);
-    
+
     const discountAmount = totalConInteres - finalAmount;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -189,8 +189,7 @@ const Checkout = () => {
         try {
             setLoading(true);
 
-            const { data } = await axios.post(
-                `${import.meta.env.VITE_API_URL}/test-course-payment`,
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/test-course-payment`,
                 {
                     transaction_amount: Math.round(finalAmount),
                     payer: { email: formData.email },
@@ -201,8 +200,24 @@ const Checkout = () => {
                 { withCredentials: true }
             );
 
-            if (data.mp_status === "approved") setStatus("ok");
-            else setError(data.message || "ERROR_TRANSACCION");
+            if (data.mp_status === "approved"){
+                try {
+                    await axios.post(`${import.meta.env.VITE_API_URL}/course-order-confirmation`, {
+                        name:       formData.nombre,
+                        email:      formData.email,
+                        items,                             
+                        totalPrice: Math.round(finalAmount),
+                        couponCode: appliedCoupon?.code  || null,
+                        discount:   appliedCoupon?.discount || null,
+                    }, { withCredentials: true });
+
+                    setStatus("ok")
+                } catch (error: any) {
+                    setError(`PAGO_REALIZADO_PERO_FALLO_CONFIRMACION, ${error}`);
+                }
+            } else {
+                setError(data.message || "ERROR_TRANSACCION");
+            }
 
         } catch (err: any) {
             setError(err.response?.data?.message || err.message || "FALLO_CRITICO_SISTEMA_PAGO");
@@ -228,14 +243,14 @@ const Checkout = () => {
                     <p className="session-required-text">
                         El acceso al curso se registra en tu cuenta. Iniciá sesión para continuar con la compra.
                     </p>
-                    <div className="session-required-actions">
+                    {/* <div className="session-required-actions">
                         <button type="button" className="session-btn-primary Montserrat-900" onClick={() => navigate('/login')}>
                             INICIAR_SESIÓN →
                         </button>
                         <button type="button" className="session-btn-secondary Montserrat-700" onClick={() => navigate('/register')}>
                             CREAR_CUENTA
                         </button>
-                    </div>
+                    </div> */}
                 </motion.div>
             )}
 

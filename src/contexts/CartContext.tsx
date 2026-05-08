@@ -34,7 +34,7 @@ interface CartContextType {
     isLocked: boolean;
     setLock: (status: boolean) => void;
     appliedCoupon: Coupon | null;
-    applyCoupon: (code: string, planId: string) => Promise<string>; 
+    applyCoupon: (code: string, planId: string | string[]) => Promise<string>; 
     handlePaymentSuccess: () => Promise<void>;
     priceAlert: string | null;
     setPriceAlert: (msg: string | null) => void;

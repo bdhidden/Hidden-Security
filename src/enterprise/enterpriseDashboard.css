@@ -16,7 +16,7 @@
     width:          100%;
     box-sizing:     border-box;
     overflow-x:     hidden;
-    padding-top: 100px;
+    padding-top:    100px;
 }
 
 .hs-admin.light {
@@ -29,7 +29,7 @@
 }
 
 .hs-mono {
-    font-family:    'Montse', monospace;
+    font-family:    'JetBrains Mono', monospace;
     font-weight:    800;
     letter-spacing: 2px;
     font-size:      0.7rem;
@@ -77,9 +77,7 @@
     color:          var(--h-text);
 }
 
-.hs-header-title span {
-    color: var(--h-accent);
-}
+.hs-header-title span { color: var(--h-accent); }
 
 .hs-header-meta {
     display:     flex;
@@ -92,8 +90,8 @@
     display:        inline-flex;
     align-items:    center;
     gap:            8px;
-    font-family:    'Montse', monospace;
-    font-size:      1rem;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.75rem;
     font-weight:    700;
     letter-spacing: 1px;
     color:          var(--h-muted);
@@ -104,7 +102,7 @@
     display:        inline-flex;
     align-items:    center;
     gap:            6px;
-    font-family:    'Montse', monospace;
+    font-family:    'JetBrains Mono', monospace;
     font-size:      0.7rem;
     font-weight:    800;
     letter-spacing: 2px;
@@ -113,7 +111,7 @@
 }
 
 @keyframes hs-blink {
-    0%, 100% { opacity: 1; }
+    0%, 100% { opacity: 1;   }
     50%       { opacity: 0.2; }
 }
 
@@ -127,15 +125,15 @@
 
 /* ── TABS NAV ────────────────────────────────────────────────── */
 .hs-tabs-nav {
-    width:        100%;
-    background:   var(--h-surface);
-    border-bottom:1px solid var(--h-border);
-    overflow-x:   auto;
+    width:           100%;
+    background:      var(--h-surface);
+    border-bottom:   1px solid var(--h-border);
+    overflow-x:      auto;
     scrollbar-width: none;
-    position:     sticky;
-    top:          0;
-    z-index:      100;
-    box-sizing:   border-box;
+    position:        sticky;
+    top:             0;
+    z-index:         100;
+    box-sizing:      border-box;
 }
 .hs-tabs-nav::-webkit-scrollbar { display: none; }
 
@@ -157,8 +155,8 @@
     border:         none;
     border-bottom:  2px solid transparent;
     color:          var(--h-muted);
-    font-family:    'Montse', monospace;
-    font-size:      0.9rem;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.75rem;
     font-weight:    800;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -173,26 +171,17 @@
     background: rgba(204, 255, 0, 0.04);
 }
 
-.hs-admin.light .hs-tab-btn:hover {
-    background: rgba(255, 85, 0, 0.04);
-}
+.hs-admin.light .hs-tab-btn:hover { background: rgba(255, 85, 0, 0.04); }
 
 .hs-tab-btn.active {
-    color:              var(--h-accent);
-    border-bottom-color:var(--h-accent);
+    color:               var(--h-accent);
+    border-bottom-color: var(--h-accent);
 }
 
-.hs-tab-icon {
-    display:     flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-.hs-tab-icon svg {
-    width:  15px;
-    height: 15px;
-}
+.hs-tab-icon         { display: flex; align-items: center; flex-shrink: 0; }
+.hs-tab-icon svg     { width: 15px; height: 15px; }
 
-/* ── BADGE VENTAS ────────────────────────────────────────────── */
+/* ── BADGE ───────────────────────────────────────────────────── */
 .hs-tab-badge {
     display:         inline-flex;
     align-items:     center;
@@ -211,67 +200,72 @@
 
 /* ── CONTENIDO ───────────────────────────────────────────────── */
 .hs-content {
-  padding: 80px 70px;
     width:      100%;
-    max-width:  100vw;
     flex:       1;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.hs-content > * {
+    width:      100%;
     box-sizing: border-box;
 }
 
 /* ── TOAST ───────────────────────────────────────────────────── */
-@keyframes hs-toast-in {
-    from { opacity: 0; transform: translateX(-50%) translateY(-16px) scale(0.96); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0)      scale(1); }
+@keyframes hs-slide-up {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
 }
 
 .hs-toast {
-    height: 70px !important;
-    position:     fixed !important;
-    right:           28px !important;
-    bottom:         28px !important;
-    z-index:      9999 !important;
-    display:      flex !important;
+  background-color: var(--h-bg) !important;
+  color: var(--h-accent) !important;
+  height: 80px;
+    position:    fixed !important;
+    bottom:      28px !important;
+    right:       28px !important;
+    z-index:     9999 !important;
+    border:      1px solid !important;          /* color via style prop */
+    padding:     14px 20px !important;
+    display:     flex !important;
     flex-direction: row !important;
-    justify-content: center !important;
-    gap:          10px !important;
-    padding:      14px 22px 14px 18px !important;
-    background:   #000 !important;
-    border-top:   2px solid var(--h-accent) !important;
-    border-left:  1px solid var(--h-border) !important;
-    border-right: 1px solid var(--h-border) !important;
-    border-bottom:1px solid var(--h-border) !important;
-    box-shadow:   0 12px 40px rgba(204, 255, 0, 0.08), 0 4px 20px rgba(0,0,0,0.6) !important;
-    font-family:  'JetBrains Mono', monospace !important;
-    font-size:    0.75rem !important;
-    font-weight:  800 !important;
-    letter-spacing:1.5px !important;
-    text-transform:uppercase !important;
-    color:        #ffffff !important;
-    animation:    hs-toast-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both !important;
-    white-space:  nowrap !important;
-    clip-path:    polygon(0 0, 100% 0, 100% 70%, 97% 100%, 0 100%) !important;
+    align-items: center !important;
+    gap:         10px !important;
+    cursor:      pointer !important;
+    max-width:   500px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size:   0.82rem !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    animation:   hs-slide-up 0.3s ease !important;
+    box-shadow:  0 8px 32px rgba(0,0,0,0.5) !important;
 }
 
 .hs-toast-dot {
-    width:       8px !important;
-    height:      8px !important;
-    background:  var(--h-accent) !important;
-    flex-shrink: 0 !important;
-    animation:   hs-blink 1s ease-in-out infinite !important;
+    width:         8px !important;
+    height:        8px !important;
+    border-radius: 50% !important;
+    flex-shrink:   0 !important;
+    animation:     hs-blink 1.2s ease-in-out infinite !important;
+    /* color via style prop */
 }
 
+.hs-toast-msg   { flex: 1 !important; }
+
 .hs-toast-close {
-    background:   transparent !important;
-    border:       none !important;
-    color:        var(--h-muted) !important;
-    font-size:    18px !important;
-    line-height:  1 !important;
-    cursor:       pointer !important;
-    padding:      0 0 0 8px !important;
-    transition:   color 0.2s !important;
-    flex-shrink:  0 !important;
+    background:  transparent !important;
+    border:      none !important;
+    color:       rgba(255,255,255,0.5) !important;
+    font-size:   18px !important;
+    line-height: 1 !important;
+    cursor:      pointer !important;
+    padding:     0 0 0 8px !important;
+    flex-shrink: 0 !important;
+    transition:  color 0.2s !important;
 }
-.hs-toast-close:hover { color: var(--h-accent) !important; }
+.hs-toast-close:hover      { color: #fff !important; }
+.hs-admin.light .hs-toast-close { color: rgba(0,0,0,0.4) !important; }
+.hs-admin.light .hs-toast-close:hover { color: #000 !important; }
 
 /* ── 401 NO AUTORIZADO ───────────────────────────────────────── */
 .hs-unauthorized {
@@ -303,480 +297,254 @@
     text-transform: uppercase;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   POSTULADOS TAB — agregar al final de enterpriseDashboard.css
-══════════════════════════════════════════════════════════════ */
-
+/* ══════════════════════════════════════════════════════
+   POSTULADOS TAB
+══════════════════════════════════════════════════════ */
 .hs-postulados { padding: 55px 80px; }
 
 .hs-postulados-loading {
-  display:     flex;
-  align-items: center;
-  gap:         10px;
-  padding:     40px 0;
-  opacity:     0.5;
-  font-size:   0.8rem;
-  font-weight: 600;
+    display:     flex;
+    align-items: center;
+    gap:         10px;
+    padding:     40px 0;
+    opacity:     0.5;
+    font-size:   0.8rem;
+    font-weight: 600;
 }
 
-/* Resumen stats */
 .hs-postulados-summary {
-  display:       flex;
-  gap:           16px;
-  margin-bottom: 32px;
-  flex-wrap:     wrap;
+    display:       flex;
+    gap:           16px;
+    margin-bottom: 32px;
+    flex-wrap:     wrap;
 }
 
 .hs-postulados-stat {
-  border:         1px solid var(--hs-border, rgba(255,255,255,0.1));
-  padding:        18px 24px;
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-  min-width:      140px;
+    border:         1px solid var(--h-border);
+    padding:        18px 24px;
+    display:        flex;
+    flex-direction: column;
+    gap:            2px;
+    min-width:      140px;
 }
 
 .hs-postulados-stat-value {
-  font-family:    'Montserrat', sans-serif;
-  font-size:      2rem;
-  font-weight:    900;
-  letter-spacing: -2px;
-  line-height:    1;
-  color:          var(--hs-accent, #ccff00);
+    font-family:    'Montserrat', sans-serif;
+    font-size:      2rem;
+    font-weight:    900;
+    letter-spacing: -2px;
+    line-height:    1;
+    color:          var(--h-accent);
 }
 
-.hs-postulados-stat-label {
-  font-size:   0.72rem;
-  font-weight: 600;
-  opacity:     0.5;
-}
+.hs-postulados-stat-label { font-size: 0.72rem; font-weight: 600; opacity: 0.5; }
 
-/* Empty state */
-.hs-postulados-empty {
-  padding:    60px 0;
-  text-align: center;
-  opacity:    0.4;
-}
+.hs-postulados-empty { padding: 60px 0; text-align: center; opacity: 0.4; }
+.hs-postulados-empty p { font-size: 0.8rem; font-weight: 500; margin-top: 10px; }
 
-.hs-postulados-empty p {
-  font-size:   0.8rem;
-  font-weight: 500;
-  margin-top:  10px;
-}
-
-/* Lista de vacantes con postulados */
-.hs-postulados-list {
-  display:        flex;
-  flex-direction: column;
-  gap:            12px;
-}
+.hs-postulados-list { display: flex; flex-direction: column; gap: 12px; }
 
 .hs-postulados-card {
-  border:     1px solid var(--hs-border, rgba(255,255,255,0.1));
-  background: var(--hs-surface, rgba(255,255,255,0.015));
-  overflow:   hidden;
+    border:     1px solid var(--h-border);
+    background: var(--h-surface);
+    overflow:   hidden;
 }
 
 .hs-postulados-card-header {
-  display:         flex;
-  justify-content: space-between;
-  align-items:     center;
-  padding:         18px 22px;
-  cursor:          pointer;
-  transition:      background 0.2s;
-  gap:             12px;
+    display:         flex;
+    justify-content: space-between;
+    align-items:     center;
+    padding:         18px 22px;
+    cursor:          pointer;
+    transition:      background 0.2s;
+    gap:             12px;
 }
 
-.hs-postulados-card-header:hover {
-  background: rgba(204, 255, 0, 0.03);
-}
+.hs-postulados-card-header:hover          { background: rgba(204,255,0,0.03); }
+.hs-admin.light .hs-postulados-card-header:hover { background: rgba(255,85,0,0.03); }
 
-.hs-admin.light .hs-postulados-card-header:hover {
-  background: rgba(255, 85, 0, 0.03);
-}
-
-.hs-postulados-card-left { display: flex; flex-direction: column; gap: 4px; }
+.hs-postulados-card-left  { display: flex; flex-direction: column; gap: 4px; }
 
 .hs-postulados-card-title {
-  font-family:    'Montserrat', sans-serif;
-  font-size:      0.95rem;
-  font-weight:    900;
-  letter-spacing: -0.3px;
-  text-transform: uppercase;
-  margin:         0;
+    font-family:    'Montserrat', sans-serif;
+    font-size:      0.95rem;
+    font-weight:    900;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
+    margin:         0;
 }
 
-.hs-postulados-card-right {
-  display:     flex;
-  align-items: center;
-  gap:         14px;
-  flex-shrink: 0;
-}
+.hs-postulados-card-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
 .hs-postulados-count {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.7rem;
-  font-weight:    800;
-  letter-spacing: 1px;
-  color:          var(--hs-accent, #ccff00);
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.7rem;
+    font-weight:    800;
+    letter-spacing: 1px;
+    color:          var(--h-accent);
 }
 
-.hs-admin.light .hs-postulados-count { color: #ff5500; }
+.hs-postulados-chevron { font-size: 0.7rem; opacity: 0.4; }
 
-.hs-postulados-chevron {
-  font-size: 0.7rem;
-  opacity:   0.4;
-}
-
-/* Lista de applicants dentro de la card */
 .hs-postulados-applicants {
-  border-top: 1px solid var(--hs-border, rgba(255,255,255,0.08));
-  padding:    12px 22px 18px;
-  display:    flex;
-  flex-direction: column;
-  gap:        8px;
-  max-height: 320px;
-  overflow-y: auto;
+    border-top:     1px solid var(--h-border);
+    padding:        12px 22px 18px;
+    display:        flex;
+    flex-direction: column;
+    gap:            8px;
+    max-height:     320px;
+    overflow-y:     auto;
 }
 
 .hs-postulados-applicant-row {
-  display:     flex;
-  align-items: center;
-  gap:         12px;
-  padding:     10px 12px;
-  background:  rgba(255,255,255,0.02);
-  border:      1px solid rgba(255,255,255,0.05);
-  flex-wrap:   wrap;
+    display:     flex;
+    align-items: center;
+    gap:         12px;
+    padding:     10px 12px;
+    background:  rgba(255,255,255,0.02);
+    border:      1px solid rgba(255,255,255,0.05);
+    flex-wrap:   wrap;
 }
 
 .hs-admin.light .hs-postulados-applicant-row {
-  background:   rgba(0,0,0,0.02);
-  border-color: rgba(0,0,0,0.06);
+    background:   rgba(0,0,0,0.02);
+    border-color: rgba(0,0,0,0.06);
 }
 
 .hs-postulados-applicant-num {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.82rem;
-  font-weight:    800;
-  letter-spacing: 1px;
-  color:          var(--hs-accent, #ccff00);
-  opacity:        0.6;
-  flex-shrink:    0;
-  min-width:      28px;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.82rem;
+    font-weight:    800;
+    letter-spacing: 1px;
+    color:          var(--h-accent);
+    opacity:        0.6;
+    flex-shrink:    0;
+    min-width:      28px;
 }
 
-.hs-admin.light .hs-postulados-applicant-num { color: #ff5500; }
-
-.hs-postulados-applicant-info {
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-  flex:           1;
-  min-width:      0;
-}
+.hs-postulados-applicant-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 
 .hs-postulados-applicant-uid {
-  font-family:   'JetBrains Mono', monospace;
-  font-size:     0.92rem !important;
-  font-weight:   700;
-  opacity:       0.75;
-  overflow:      hidden;
-  text-overflow: ellipsis;
-  white-space:   nowrap;
+    font-family:   'JetBrains Mono', monospace;
+    font-size:     0.92rem;
+    font-weight:   700;
+    opacity:       0.75;
+    overflow:      hidden;
+    text-overflow: ellipsis;
+    white-space:   nowrap;
 }
 
 .hs-postulados-applicant-date {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.78rem !important;
-  font-weight:    600;
-  opacity:        0.35;
-  letter-spacing: 0.5px;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.78rem;
+    font-weight:    600;
+    opacity:        0.35;
+    letter-spacing: 0.5px;
 }
 
-.hs-postulados-applicant-status {
-  display:     flex;
-  align-items: center;
-  gap:         8px;
-  flex-shrink: 0;
-}
+.hs-postulados-applicant-status { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 .hs-postulados-status-dot {
-  width:         7px;
-  height:        7px;
-  border-radius: 50%;
-  flex-shrink:   0;
+    width:         7px;
+    height:        7px;
+    border-radius: 50%;
+    flex-shrink:   0;
 }
 
 .hs-postulados-status-select {
-  background:     rgba(255,255,255,0.03);
-  border:         1px solid;
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.8rem !important;
-  font-weight:    800;
-  letter-spacing: 1px;
-  padding:        4px 8px;
-  cursor:         pointer;
-  outline:        none;
-  transition:     opacity 0.2s;
+    background:     rgba(255,255,255,0.03);
+    border:         1px solid;
+    font-family:    'JetBrains Mono', monospace;
+    font-size:      0.8rem;
+    font-weight:    800;
+    letter-spacing: 1px;
+    padding:        4px 8px;
+    cursor:         pointer;
+    outline:        none;
+    transition:     opacity 0.2s;
 }
 
-.hs-postulados-status-select option { background: #111; color: #fff; }
+.hs-postulados-status-select option           { background: #111; color: #fff; }
 .hs-admin.light .hs-postulados-status-select option { background: #eee; color: #000; }
 
-.hs-toast {
-  position:    fixed;
-  bottom:      28px;
-  right:       28px;
-  z-index:     999;
-  border:      1px solid;
-  padding:     14px 20px;
-  display:     flex;
-  align-items: center;
-  gap:         10px;
-  cursor:      pointer;
-  max-width:   420px;
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .hs-header-inner { padding: 20px; }
+    .hs-header-meta  { display: none; }
+    .hs-tabs-inner   { padding: 0 12px; justify-content: flex-start; }
+    .hs-tab-btn      { padding: 14px 16px; }
+    .hs-tab-label    { display: none; }
+    .hs-tab-icon svg { width: 18px; height: 18px; }
+    .hs-tab-btn.active .hs-tab-label { display: inline; }
+    .hs-401          { font-size: 5rem; }
+    .hs-postulados   { padding: 24px 20px; }
+    .hs-toast        { right: 12px; bottom: 12px; max-width: calc(100vw - 24px); font-size: 0.72rem; }
+}
+
+@media (max-width: 480px) {
+    .hs-header-title { font-size: 1.2rem; }
+}
+
+/* ── Filtros postulados ───────────────────────────────────────── */
+.hs-filter-input {
+  background:  rgba(255,255,255,0.03);
+  border:      1px solid var(--h-border);
+  color:       var(--h-text);
   font-family: 'Montserrat', sans-serif;
-  font-size:   0.82rem;
-  font-weight: 700;
-  animation:   hs-slide-up 0.3s ease;
-}
-
-@keyframes hs-slide-up {
-  from { transform: translateY(16px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.hs-toast-dot {
-  width:         8px;
-  height:        8px;
-  border-radius: 50%;
-  flex-shrink:   0;
-  /* color via style */
-}
-
-.hs-toast-msg { flex: 1; line-height: 1.4; }
-
-/* ══════════════════════════════════════════════════════════════
-   POSTULADOS TAB — agregar al final de enterpriseDashboard.css
-══════════════════════════════════════════════════════════════ */
-
-.hs-postulados { padding: 8px 0; }
-
-.hs-postulados-loading {
-  display:     flex;
-  align-items: center;
-  gap:         10px;
-  padding:     40px 0;
-  opacity:     0.5;
-  font-size:   0.8rem;
+  font-size:   0.75rem;
   font-weight: 600;
+  padding:     8px 12px;
+  outline:     none;
+  transition:  border-color 0.2s;
 }
+.hs-filter-input:focus { border-color: var(--h-accent); }
+.hs-admin.light .hs-filter-input { background: rgba(0,0,0,0.03); }
 
-/* Resumen stats */
-.hs-postulados-summary {
-  display:       flex;
-  gap:           16px;
-  margin-bottom: 32px;
-  flex-wrap:     wrap;
+.hs-filter-select {
+  background:  rgba(255,255,255,0.03);
+  border:      1px solid var(--h-border);
+  color:       var(--h-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size:   0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding:     8px 12px;
+  outline:     none;
+  cursor:      pointer;
+  appearance:  none;
+  transition:  border-color 0.2s;
 }
+.hs-filter-select:focus { border-color: var(--h-accent); }
+.hs-filter-select option { background: #111; color: #fff; }
+.hs-admin.light .hs-filter-select { background: rgba(0,0,0,0.03); }
+.hs-admin.light .hs-filter-select option { background: #eee; color: #000; }
 
-.hs-postulados-stat {
-  border:         1px solid var(--hs-border, rgba(255,255,255,0.1));
-  padding:        18px 24px;
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-  min-width:      140px;
-}
-
-.hs-postulados-stat-value {
-  font-family:    'Montserrat', sans-serif;
-  font-size:      2rem;
-  font-weight:    900;
-  letter-spacing: -2px;
-  line-height:    1;
-  color:          var(--hs-accent, #ccff00);
-}
-
-.hs-postulados-stat-label {
-  font-size:   0.72rem;
-  font-weight: 600;
-  opacity:     0.5;
-}
-
-/* Empty state */
-.hs-postulados-empty {
-  padding:    60px 0;
-  text-align: center;
-  opacity:    0.4;
-}
-
-.hs-postulados-empty p {
-  font-size:   0.8rem;
-  font-weight: 500;
-  margin-top:  10px;
-}
-
-/* Lista de vacantes con postulados */
-.hs-postulados-list {
-  display:        flex;
-  flex-direction: column;
-  gap:            12px;
-}
-
-.hs-postulados-card {
-  border:     1px solid var(--hs-border, rgba(255,255,255,0.1));
-  background: var(--hs-surface, rgba(255,255,255,0.015));
-  overflow:   hidden;
-}
-
-.hs-postulados-card-header {
-  display:         flex;
-  justify-content: space-between;
-  align-items:     center;
-  padding:         18px 22px;
-  cursor:          pointer;
-  transition:      background 0.2s;
-  gap:             12px;
-}
-
-.hs-postulados-card-header:hover {
-  background: rgba(204, 255, 0, 0.03);
-}
-
-.hs-admin.light .hs-postulados-card-header:hover {
-  background: rgba(255, 85, 0, 0.03);
-}
-
-.hs-postulados-card-left { display: flex; flex-direction: column; gap: 4px; }
-
-.hs-postulados-card-title {
-  font-family:    'Montserrat', sans-serif;
-  font-size:      0.95rem;
-  font-weight:    900;
-  letter-spacing: -0.3px;
+/* ── Botones de acción ───────────────────────────────────────── */
+.hs-action-btn {
+  background:     transparent;
+  border:         1px solid var(--h-border);
+  color:          var(--h-muted);
+  font-family:    'JetBrains Mono', monospace;
+  font-size:      0.62rem;
+  font-weight:    800;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin:         0;
-}
-
-.hs-postulados-card-right {
-  display:     flex;
-  align-items: center;
-  gap:         14px;
-  flex-shrink: 0;
-}
-
-.hs-postulados-count {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.7rem;
-  font-weight:    800;
-  letter-spacing: 1px;
-  color:          var(--hs-accent, #ccff00);
-}
-
-.hs-admin.light .hs-postulados-count { color: #ff5500; }
-
-.hs-postulados-chevron {
-  font-size: 0.7rem;
-  opacity:   0.4;
-}
-
-/* Lista de applicants dentro de la card */
-.hs-postulados-applicants {
-  border-top: 1px solid var(--hs-border, rgba(255,255,255,0.08));
-  padding:    12px 22px 18px;
-  display:    flex;
-  flex-direction: column;
-  gap:        8px;
-  max-height: 320px;
-  overflow-y: auto;
-}
-
-.hs-postulados-applicant-row {
-  display:     flex;
-  align-items: center;
-  gap:         12px;
-  padding:     10px 12px;
-  background:  rgba(255,255,255,0.02);
-  border:      1px solid rgba(255,255,255,0.05);
-  flex-wrap:   wrap;
-}
-
-.hs-admin.light .hs-postulados-applicant-row {
-  background:   rgba(0,0,0,0.02);
-  border-color: rgba(0,0,0,0.06);
-}
-
-.hs-postulados-applicant-num {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.62rem;
-  font-weight:    800;
-  letter-spacing: 1px;
-  color:          var(--hs-accent, #ccff00);
-  opacity:        0.6;
-  flex-shrink:    0;
-  min-width:      28px;
-}
-
-.hs-admin.light .hs-postulados-applicant-num { color: #ff5500; }
-
-.hs-postulados-applicant-info {
-  display:        flex;
-  flex-direction: column;
-  gap:            2px;
-  flex:           1;
-  min-width:      0;
-}
-
-.hs-postulados-applicant-uid {
-  font-family:   'JetBrains Mono', monospace;
-  font-size:     0.72rem;
-  font-weight:   700;
-  opacity:       0.75;
-  overflow:      hidden;
-  text-overflow: ellipsis;
-  white-space:   nowrap;
-}
-
-.hs-postulados-applicant-date {
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.58rem;
-  font-weight:    600;
-  opacity:        0.35;
-  letter-spacing: 0.5px;
-}
-
-.hs-postulados-applicant-status {
-  display:     flex;
-  align-items: center;
-  gap:         8px;
-  flex-shrink: 0;
-}
-
-.hs-postulados-status-dot {
-  width:         7px;
-  height:        7px;
-  border-radius: 50%;
-  flex-shrink:   0;
-}
-
-.hs-postulados-status-select {
-  background:     rgba(255,255,255,0.03);
-  border:         1px solid;
-  font-family:    'JetBrains Mono', monospace;
-  font-size:      0.62rem;
-  font-weight:    800;
-  letter-spacing: 1px;
-  padding:        4px 8px;
+  padding:        5px 11px;
   cursor:         pointer;
-  outline:        none;
-  transition:     opacity 0.2s;
+  transition:     all 0.2s;
+  white-space:    nowrap;
 }
+.hs-action-btn:hover:not(:disabled) { border-color: var(--h-accent); color: var(--h-accent); }
+.hs-action-btn:disabled             { opacity: 0.35; cursor: not-allowed; }
 
-.hs-postulados-status-select option { background: #111; color: #fff; }
-.hs-admin.light .hs-postulados-status-select option { background: #eee; color: #000; }
+.hs-action-btn--accent {
+  border-color: rgba(204,255,0,0.4);
+  color:        var(--h-accent);
+}
+.hs-action-btn--accent:hover { background: rgba(204,255,0,0.07); }
+.hs-admin.light .hs-action-btn--accent { border-color: rgba(255,85,0,0.4); color: #ff5500; }
 
-/* ── Modal CV del postulante ──────────────────────────────────── */
+/* ── Modal VER CV ─────────────────────────────────────────────── */
 .hs-postulados-cv-overlay {
   position:        fixed;
   inset:           0;
@@ -791,20 +559,22 @@
 .hs-postulados-cv-modal {
   margin-top: 80px;
   background:     #000;
-  border:         1px solid var(--h-accent, #ccff00);
+  border:         1px solid var(--h-accent);
   width:          100%;
-  max-width:      880px;
+  max-width:      840px;
   max-height:     85vh;
   display:        flex;
   flex-direction: column;
   overflow:       hidden;
 }
 
+.hs-admin.light .hs-postulados-cv-modal { background: #f5f5f5; }
+
 .hs-postulados-cv-modal-header {
   display:         flex;
   justify-content: space-between;
   align-items:     center;
-  padding:         18px 22px;
+  padding:         18px 24px;
   border-bottom:   1px solid rgba(204,255,0,0.15);
   flex-shrink:     0;
   gap:             12px;
@@ -815,117 +585,103 @@
   background:  transparent;
   border:      none;
   color:       rgba(255,255,255,0.4);
-  font-size:   22px;
+  font-size:   24px;
   line-height: 1;
   cursor:      pointer;
+  padding:     0 4px;
   transition:  color 0.2s;
 }
 .hs-postulados-cv-close:hover { color: #fff; }
+.hs-admin.light .hs-postulados-cv-close { color: rgba(0,0,0,0.35); }
+.hs-admin.light .hs-postulados-cv-close:hover { color: #000; }
 
 .hs-postulados-cv-body {
   overflow-y: auto;
-  padding:    24px 22px;
+  padding:    28px 24px;
   flex:       1;
 }
 
-/* CV viewer */
+/* ── CV viewer ─────────────────────────────────────────────────── */
 .hs-cv-header {
-  display:     flex;
-  align-items: flex-start;
-  gap:         16px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display:        flex;
+  align-items:    flex-start;
+  gap:            18px;
+  margin-bottom:  22px;
+  padding-bottom: 18px;
+  border-bottom:  1px solid var(--h-border);
 }
 
 .hs-cv-photo {
-  width:         72px;
-  height:        72px;
+  width:         80px;
+  height:        80px;
   object-fit:    cover;
-  border:        2px solid rgba(204,255,0,0.3);
+  border:        2px solid rgba(204,255,0,0.35);
   border-radius: 2px;
   flex-shrink:   0;
 }
 
+.hs-cv-header-info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+
 .hs-cv-name {
   font-family:    'Montserrat', sans-serif;
-  font-size:      1.2rem;
+  font-size:      1.25rem;
   font-weight:    900;
   letter-spacing: -0.5px;
   text-transform: uppercase;
-  color:          var(--h-accent, #ccff00);
-  margin-bottom:  4px;
+  color:          var(--h-accent);
+  margin:         0;
 }
 
-.hs-cv-headline {
-  font-size:   0.78rem;
-  font-weight: 600;
-  opacity:     0.6;
-  margin-bottom: 8px;
-}
+.hs-cv-headline { font-size: 0.78rem; font-weight: 600; opacity: 0.6; margin: 0; }
 
-.hs-cv-contacts {
-  display:   flex;
-  flex-wrap: wrap;
-  gap:       8px;
-}
-
+.hs-cv-contacts { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 4px; }
 .hs-cv-contacts span {
   font-family: 'JetBrains Mono', monospace;
-  font-size:   0.62rem;
+  font-size:   0.65rem;
   font-weight: 700;
   opacity:     0.55;
-  letter-spacing: 0.5px;
 }
 
-.hs-cv-section { margin-bottom: 18px; }
+.hs-cv-section { margin-bottom: 20px; }
 
 .hs-cv-section-title {
+  display:        block;
   font-family:    'JetBrains Mono', monospace;
   font-size:      0.6rem;
   font-weight:    800;
-  letter-spacing: 2.5px;
-  color:          var(--h-accent, #ccff00);
+  letter-spacing: 3px;
+  color:          var(--h-accent);
   text-transform: uppercase;
-  display:        block;
   margin-bottom:  10px;
+  padding-bottom: 6px;
+  border-bottom:  1px solid rgba(204,255,0,0.12);
 }
 
-.hs-cv-entry { margin-bottom: 12px; }
+.hs-cv-entry {
+  margin-bottom:  14px;
+  padding-bottom: 14px;
+  border-bottom:  1px solid var(--h-border);
+}
+.hs-cv-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
 .hs-cv-entry-header {
   display:         flex;
   justify-content: space-between;
   align-items:     flex-start;
-  gap:             10px;
+  gap:             12px;
   flex-wrap:       wrap;
-  margin-bottom:   4px;
+  margin-bottom:   5px;
   font-size:       0.82rem;
   font-weight:     700;
 }
 
-.hs-cv-text {
-  font-size:   0.78rem;
-  font-weight: 500;
-  opacity:     0.75;
-  line-height: 1.7;
-  margin:      0;
-  white-space: pre-line;
-}
+.hs-cv-entry-header strong { font-weight: 900; font-size: 0.85rem; text-transform: uppercase; }
 
-/* ── RESPONSIVE ──────────────────────────────────────────────── */
+.hs-cv-text { font-size: 0.78rem; font-weight: 500; opacity: 0.72; line-height: 1.75; margin: 0; white-space: pre-line; }
+
 @media (max-width: 768px) {
-    .hs-header-inner { padding: 20px; }
-    .hs-header-meta  { display: none; }
-    .hs-tabs-inner   { padding: 0 12px; justify-content: flex-start; }
-    .hs-tab-btn      { padding: 14px 16px; }
-    .hs-tab-label    { display: none; }
-    .hs-tab-icon svg { width: 18px; height: 18px; }
-    .hs-tab-btn.active .hs-tab-label { display: inline; }
-    .hs-401          { font-size: 5rem; }
-}
-
-@media (max-width: 480px) {
-    .hs-header-title { font-size: 1.2rem; }
-    .hs-toast        { font-size: 0.65rem; padding: 12px 16px 12px 14px; }
+  .hs-postulados-cv-body         { padding: 18px 16px; }
+  .hs-postulados-cv-modal-header { padding: 14px 16px; }
+  .hs-cv-photo                   { width: 56px; height: 56px; }
+  .hs-cv-name                    { font-size: 1rem; }
 }

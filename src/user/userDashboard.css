@@ -44,6 +44,7 @@
   padding:      132px 20px;
   margin:       0 auto;
   transition:   background 0.35s, color 0.35s;
+  overflow-x: hidden;
 }
 .dm-container.dark  { background: var(--dm-bg); }
 .dm-container.light { background: var(--dm-bg); }
@@ -1134,13 +1135,14 @@
 /* ════════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════════ */
-@media (max-width: 640px) {
-  .dm-container     { padding: 20px 14px; }
+@media (max-width: 768px) {
+  .dm-hero-email { font-size: 14px !important; }
+  .dm-container     { padding: 120px 14px; }
   .dm-stats         { grid-template-columns: 1fr; gap: 2px; }
   .dm-stat-accent   { border-left: none; border-right: none; border-top: 2px solid var(--dm-accent); border-bottom: 2px solid var(--dm-accent); }
   .dm-purchase-detail { grid-template-columns: 1fr; }
   .dm-account-grid  { grid-template-columns: 1fr; }
   .dm-hero          { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .dm-tabs          { overflow-x: auto; }
+  .dm-tabs          { height: 50px; overflow-x: auto; overflow-y: hidden;}
   .dm-tab           { white-space: nowrap; }
 }

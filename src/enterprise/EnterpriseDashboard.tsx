@@ -46,7 +46,7 @@ const APPLICANT_STATUS_LABELS: Record<string, { label: string; color: string }> 
   rejected:   { label: "No seleccionado",    color: "#f43f5e" },
 };
 
-// ─── Badge helper  
+// ─── Badge helper ─────────────────────────────────────────────────────────────
 function ApplicantBadge({ count }: { count: number }) {
   if (count === 0) return null;
   return (
@@ -56,15 +56,20 @@ function ApplicantBadge({ count }: { count: number }) {
   );
 }
 
-// ─── Tab: Postulados  
+// ─── Tab: Postulados ──────────────────────────────────────────────────────────
 function PostuladosTab() {
-  const [vacancies,       setVacancies]       = useState<VacancySummary[]>([]);
-  const [loading,         setLoading]         = useState(true);
-  const [expanded,        setExpanded]        = useState<string | null>(null);
-  const [updatingStatus,  setUpdatingStatus]  = useState<string | null>(null);
-  const [cvModal,         setCvModal]         = useState<{ userId: string; name: string } | null>(null);
-  const [cvData,          setCvData]          = useState<any | null>(null);
-  const [loadingCv,       setLoadingCv]       = useState(false);
+  const [vacancies,      setVacancies]      = useState<VacancySummary[]>([]);
+  const [loading,        setLoading]        = useState(true);
+  const [expanded,       setExpanded]       = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [deletingId,     setDeletingId]     = useState<string | null>(null);
+  const [cvModal,        setCvModal]        = useState<{ userId: string; name: string } | null>(null);
+  const [cvData,         setCvData]         = useState<any | null>(null);
+  const [loadingCv,      setLoadingCv]      = useState(false);
+
+  // Filtros globales
+  const [filterStatus,   setFilterStatus]   = useState(""); // "" = todos
+  const [filterSearch,   setFilterSearch]   = useState(""); // nombre / email
 
   const fetchVacancies = () => {
     axios
@@ -76,22 +81,22 @@ function PostuladosTab() {
 
   useEffect(() => { fetchVacancies(); }, []);
 
+  // ── Abrir CV ──────────────────────────────────────────────────
   const openCV = async (userId: string, name: string) => {
     setCvModal({ userId, name });
     setCvData(null);
     setLoadingCv(true);
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/cv/user/${userId}`,{ withCredentials: true });
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/cv/user/${userId}`,
+        { withCredentials: true }
+      );
       setCvData(data.data);
-      console.log("CV", data.data);
-      
-    } catch {
-      setCvData(null);
-    } finally {
-      setLoadingCv(false);
-    }
+    } catch { setCvData(null); }
+    finally  { setLoadingCv(false); }
   };
 
+  // ── Descargar PDF ─────────────────────────────────────────────
   const downloadCV = (_userId: string, name: string) => {
     if (!cvData) return;
     const p        = cvData.personalInfo ?? {};
@@ -102,8 +107,7 @@ function PostuladosTab() {
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;page-break-after:avoid;">
           <span style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:900;letter-spacing:5px;text-transform:uppercase;color:#111;white-space:nowrap;">${title}</span>
           <div style="flex:1;height:2px;background:#000;"></div>
-        </div>
-        ${content}
+        </div>${content}
       </div>`;
 
     const entry = (inner: string) => `<div style="page-break-inside:avoid;margin-bottom:18px;">${inner}</div>`;
@@ -115,15 +119,15 @@ function PostuladosTab() {
     const experienceHTML = (cvData.experience ?? []).map((e: any) => entry(`
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:5px;">
         <div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:-0.3px;color:#000;">${e.position}</div>
+          <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;color:#000;">${e.position}</div>
           <div style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#555;margin-top:2px;">${e.company}${e.location ? ` · ${e.location}` : ""}</div>
         </div>
         <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:#888;letter-spacing:1px;white-space:nowrap;padding-top:3px;">
           ${e.startDate}${e.startDate ? " — " : ""}${e.current ? "Actualidad" : e.endDate}
         </div>
       </div>
-      ${e.description ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#333;line-height:1.8;margin:6px 0 0;">${e.description}</p>` : ""}
-    `)).join("");
+      ${e.description ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#333;line-height:1.8;margin:6px 0 0;">${e.description}</p>` : ""}`
+    )).join("");
 
     const educationHTML = (cvData.education ?? []).map((e: any) => entry(`
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:5px;">
@@ -135,8 +139,8 @@ function PostuladosTab() {
           ${e.startDate}${e.startDate ? " — " : ""}${e.current ? "Actualidad" : e.endDate}
         </div>
       </div>
-      ${e.description ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#333;line-height:1.8;margin:6px 0 0;">${e.description}</p>` : ""}
-    `)).join("");
+      ${e.description ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#333;line-height:1.8;margin:6px 0 0;">${e.description}</p>` : ""}`
+    )).join("");
 
     const certsHTML = (cvData.certifications ?? []).map((c: any) => entry(`
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
@@ -146,8 +150,8 @@ function PostuladosTab() {
           ${c.credentialId ? `<div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;color:#999;margin-top:3px;">ID: ${c.credentialId}</div>` : ""}
         </div>
         <span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:#999;letter-spacing:1px;white-space:nowrap;">${c.date}</span>
-      </div>
-    `)).join("");
+      </div>`
+    )).join("");
 
     const langsHTML = `<div style="display:flex;flex-wrap:wrap;gap:28px;">${(cvData.languages ?? []).map((l: any) => `
       <div style="page-break-inside:avoid;">
@@ -166,8 +170,8 @@ function PostuladosTab() {
         </div>
         ${proj.description ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:500;color:#333;line-height:1.8;margin:0 0 8px;">${proj.description}</p>` : ""}
         ${(proj.technologies ?? []).length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:4px;">${proj.technologies.map((t: string) => `<span style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border:1px solid #bbb;color:#444;padding:3px 8px;">${t}</span>`).join("")}</div>` : ""}
-      </div>
-    `)).join("");
+      </div>`
+    )).join("");
 
     const wp = cvData.workPreferences ?? {};
     const dispHTML = `
@@ -177,57 +181,40 @@ function PostuladosTab() {
         ${wp.salaryMin || wp.salaryMax ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#555;">${wp.currency ?? "USD"} ${wp.salaryMin?.toLocaleString("es-AR") ?? ""}${wp.salaryMin && wp.salaryMax ? " — " : ""}${wp.salaryMax?.toLocaleString("es-AR") ?? ""}</span>` : ""}
       </div>`;
 
-    const html = `<!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8"/>
-        <title>${filename}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-        <style>
-          * { margin:0; padding:0; box-sizing:border-box; }
-          body { background:#fff; color:#000; font-family:'Montserrat',sans-serif; }
-          @page { size:A4; margin:18mm 16mm; }
-          @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } .no-print { display:none !important; } }
-        </style>
-      </head>
-      <body>
-      <div style="max-width:794px;margin:0 auto;padding:0 0 48px;">
-
-        <div style="page-break-inside:avoid;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding-bottom:20px;border-bottom:3px solid #000;margin-bottom:28px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:200px;padding:30px;">
-            <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:#888;margin-bottom:8px;">CURRICULUM VITAE</div>
-            <h1 style="font-family:'Montserrat',sans-serif;font-size:42px;font-weight:900;letter-spacing:-2.5px;text-transform:uppercase;line-height:0.92;color:#000;margin-bottom:10px;">
-              ${p.firstName ?? ""}<br/>${p.lastName ?? ""}
-            </h1>
-            ${p.headline ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:#555;line-height:1.5;margin-top:8px;max-width:380px;">${p.headline}</p>` : ""}
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-top:30px;">
-            ${p.photo ? `<img src="${p.photo}" alt="Foto" style="width:90px;height:90px;object-fit:cover;border:2px solid #000;border-radius:2px;display:block;" />` : ""}
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-              ${p.email    ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.email}</span>` : ""}
-              ${p.phone    ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.phone}</span>` : ""}
-              ${p.location ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.location}</span>` : ""}
-              ${p.linkedin ? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#000;text-transform:uppercase;">${p.linkedin}</span>` : ""}
-              ${p.github   ? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#555;text-transform:uppercase;">${p.github}</span>` : ""}
-              ${p.portfolio? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#555;text-transform:uppercase;">${p.portfolio}</span>` : ""}
-            </div>
+    const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"/><title>${filename}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+      <style>*{margin:0;padding:0;box-sizing:border-box;}body{background:#fff;color:#000;font-family:'Montserrat',sans-serif;}@page{size:A4;margin:18mm 16mm;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.no-print{display:none!important;}}</style>
+    </head><body><div style="max-width:794px;margin:0 auto;padding:0 0 48px;">
+      <div style="page-break-inside:avoid;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding-bottom:20px;border-bottom:3px solid #000;margin-bottom:28px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;padding:30px;">
+          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:#888;margin-bottom:8px;">CURRICULUM VITAE</div>
+          <h1 style="font-family:'Montserrat',sans-serif;font-size:42px;font-weight:900;letter-spacing:-2.5px;text-transform:uppercase;line-height:0.92;color:#000;margin-bottom:10px;">${p.firstName ?? ""}<br/>${p.lastName ?? ""}</h1>
+          ${p.headline ? `<p style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:#555;line-height:1.5;margin-top:8px;max-width:380px;">${p.headline}</p>` : ""}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-top:30px;">
+          ${p.photo ? `<img src="${p.photo}" alt="Foto" style="width:90px;height:90px;object-fit:cover;border:2px solid #000;border-radius:2px;display:block;" />` : ""}
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            ${p.email    ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.email}</span>` : ""}
+            ${p.phone    ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.phone}</span>` : ""}
+            ${p.location ? `<span style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;color:#333;">${p.location}</span>` : ""}
+            ${p.linkedin ? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#000;text-transform:uppercase;">${p.linkedin}</span>` : ""}
+            ${p.github   ? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#555;text-transform:uppercase;">${p.github}</span>` : ""}
+            ${p.portfolio? `<span style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.5px;color:#555;text-transform:uppercase;">${p.portfolio}</span>` : ""}
           </div>
         </div>
-
-        ${p.summary ? section("PERFIL PROFESIONAL", `<p style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;color:#222;line-height:1.85;border-left:3px solid #000;padding-left:16px;">${p.summary}</p>`) : ""}
-        ${experienceHTML ? section("EXPERIENCIA LABORAL", experienceHTML) : ""}
-        ${educationHTML  ? section("EDUCACIÓN",           educationHTML)  : ""}
-        ${skillTags      ? section("SKILLS TÉCNICAS",     `<div style="display:flex;flex-wrap:wrap;gap:4px;">${skillTags}</div>`) : ""}
-        ${projectsHTML   ? section("PROYECTOS",           projectsHTML)   : ""}
-        ${certsHTML      ? section("CERTIFICACIONES",     certsHTML)      : ""}
-        ${(cvData.languages ?? []).length > 0 ? section("IDIOMAS", langsHTML) : ""}
-        ${cvData.availability ? section("DISPONIBILIDAD", dispHTML) : ""}
-
       </div>
-      <div class="no-print" style="position:fixed;bottom:24px;right:24px;">
-        <button onclick="window.print()" style="background:#000;border:none;color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;cursor:pointer;">↓ GUARDAR PDF</button>
-      </div>
-      </body></html>`;
+      ${p.summary ? section("PERFIL PROFESIONAL", `<p style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;color:#222;line-height:1.85;border-left:3px solid #000;padding-left:16px;">${p.summary}</p>`) : ""}
+      ${experienceHTML ? section("EXPERIENCIA LABORAL", experienceHTML) : ""}
+      ${educationHTML  ? section("EDUCACIÓN",           educationHTML)  : ""}
+      ${skillTags      ? section("SKILLS TÉCNICAS",    `<div style="display:flex;flex-wrap:wrap;gap:4px;">${skillTags}</div>`) : ""}
+      ${projectsHTML   ? section("PROYECTOS",           projectsHTML)   : ""}
+      ${certsHTML      ? section("CERTIFICACIONES",     certsHTML)      : ""}
+      ${(cvData.languages ?? []).length > 0 ? section("IDIOMAS", langsHTML) : ""}
+      ${cvData.availability ? section("DISPONIBILIDAD", dispHTML) : ""}
+    </div>
+    <div class="no-print" style="position:fixed;bottom:24px;right:24px;">
+      <button onclick="window.print()" style="background:#000;border:none;color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;cursor:pointer;">↓ GUARDAR PDF</button>
+    </div></body></html>`;
 
     const win = window.open("", "_blank");
     if (!win) return;
@@ -235,6 +222,7 @@ function PostuladosTab() {
     win.document.close();
   };
 
+  // ── Cambiar estado ────────────────────────────────────────────
   const handleStatusChange = async (vacancyId: string, userId: string, newStatus: string) => {
     const key = `${vacancyId}-${userId}`;
     setUpdatingStatus(key);
@@ -244,7 +232,6 @@ function PostuladosTab() {
         { status: newStatus },
         { withCredentials: true }
       );
-      // Actualizar estado local sin refetch
       setVacancies((prev) =>
         prev.map((v) =>
           v._id !== vacancyId ? v : {
@@ -255,15 +242,53 @@ function PostuladosTab() {
           }
         )
       );
-    } catch (err) {
-      console.error("Error actualizando estado:", err);
-    } finally {
-      setUpdatingStatus(null);
-    }
+    } catch (err) { console.error("Error actualizando estado:", err); }
+    finally       { setUpdatingStatus(null); }
   };
 
+  // ── Eliminar postulante ───────────────────────────────────────
+  const handleDelete = async (vacancyId: string, userId: string) => {
+    const key = `${vacancyId}-${userId}`;
+    setDeletingId(key);
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/vacancy/${vacancyId}/applicants/${userId}`,
+        { withCredentials: true }
+      );
+      setVacancies((prev) =>
+        prev.map((v) =>
+          v._id !== vacancyId ? v : {
+            ...v,
+            applicants: v.applicants.filter((a) => a.userId !== userId),
+          }
+        )
+      );
+    } catch (err) { console.error("Error eliminando postulante:", err); }
+    finally       { setDeletingId(null); }
+  };
+
+  // ── Cómputos ──────────────────────────────────────────────────
   const totalApplicants = vacancies.reduce((acc, v) => acc + (v.applicants?.length ?? 0), 0);
   const withApplicants  = vacancies.filter((v) => (v.applicants?.length ?? 0) > 0);
+
+  // Aplana todos los postulantes con referencia a su vacante para los filtros globales
+  type FlatApplicant = Applicant & { vacancyId: string; vacancyTitle: string };
+  const allFlat: FlatApplicant[] = vacancies.flatMap((v) =>
+    (v.applicants ?? []).map((a) => ({ ...a, vacancyId: v._id, vacancyTitle: v.title }))
+  );
+
+  const filteredFlat = allFlat.filter((a) => {
+    const name  = (a as any).applicantName  ?? "";
+    const email = (a as any).applicantEmail ?? "";
+    if (filterStatus && a.status !== filterStatus) return false;
+    if (filterSearch) {
+      const q = filterSearch.toLowerCase();
+      if (!name.toLowerCase().includes(q) && !email.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  const hasFilters = filterStatus || filterSearch;
 
   if (loading) return (
     <div className="hs-postulados-loading">
@@ -271,10 +296,87 @@ function PostuladosTab() {
     </div>
   );
 
+  // ── Render de una fila de postulante ──────────────────────────
+  const renderApplicantRow = (applicant: any, vacancyId: string, index: number, showVacancy = false) => {
+    const statusInfo  = APPLICANT_STATUS_LABELS[applicant.status] ?? APPLICANT_STATUS_LABELS.pending;
+    const isUpdating  = updatingStatus === `${vacancyId}-${applicant.userId}`;
+    const isDeleting  = deletingId    === `${vacancyId}-${applicant.userId}`;
+    const name        = applicant.applicantName  || applicant.userId;
+    const email       = applicant.applicantEmail || "";
+    const phone       = applicant.applicantPhone || "";
+    const isRejected  = applicant.status === "rejected";
+
+    return (
+      <div key={`${vacancyId}-${applicant.userId}`} className="hs-postulados-applicant-row">
+        <span className="hs-postulados-applicant-num">#{index + 1}</span>
+
+        <div className="hs-postulados-applicant-info">
+          <span className="hs-postulados-applicant-uid">{name}</span>
+          {showVacancy && (
+            <span style={{ fontSize: "0.62rem", opacity: 0.45, fontFamily: "'JetBrains Mono',monospace", letterSpacing: 1 }}>
+              {applicant.vacancyTitle}
+            </span>
+          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 2 }}>
+            {email && <span className="hs-postulados-applicant-date">{email}</span>}
+            {phone && <span className="hs-postulados-applicant-date">{phone}</span>}
+            {applicant.appliedAt && (
+              <span className="hs-postulados-applicant-date">
+                {new Date(applicant.appliedAt).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" })}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0, flexWrap: "wrap" }}>
+          <button
+            className="hs-action-btn hs-action-btn--accent"
+            style={{ fontSize: "0.58rem", padding: "4px 9px" }}
+            onClick={() => openCV(applicant.userId, name)}
+          >
+            VER CV
+          </button>
+          <button
+            className="hs-action-btn"
+            style={{ fontSize: "0.58rem", padding: "4px 9px" }}
+            onClick={() => downloadCV(applicant.userId, name)}
+          >
+            ↓ PDF
+          </button>
+          {isRejected && (
+            <button
+              className="hs-action-btn"
+              style={{ fontSize: "0.58rem", padding: "4px 9px", borderColor: "rgba(244,63,94,0.5)", color: "#f43f5e", opacity: isDeleting ? 0.4 : 1 }}
+              disabled={isDeleting}
+              onClick={() => handleDelete(vacancyId, applicant.userId)}
+            >
+              {isDeleting ? "..." : "ELIMINAR"}
+            </button>
+          )}
+        </div>
+
+        <div className="hs-postulados-applicant-status">
+          <span className="hs-postulados-status-dot" style={{ background: statusInfo.color }} />
+          <select
+            className="hs-postulados-status-select"
+            value={applicant.status}
+            disabled={isUpdating}
+            onChange={(e) => handleStatusChange(vacancyId, applicant.userId, e.target.value)}
+            style={{ borderColor: statusInfo.color, color: statusInfo.color, opacity: isUpdating ? 0.5 : 1 }}
+          >
+            {Object.entries(APPLICANT_STATUS_LABELS).map(([val, { label }]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="hs-postulados">
 
-      {/* Resumen */}
+      {/* Stats */}
       <div className="hs-postulados-summary">
         <div className="hs-postulados-stat">
           <span className="hs-mono hs-eyebrow" style={{ marginBottom: 4 }}>// TOTAL</span>
@@ -286,92 +388,111 @@ function PostuladosTab() {
           <span className="hs-postulados-stat-value">{withApplicants.length}</span>
           <span className="hs-postulados-stat-label">con postulados</span>
         </div>
+        {Object.entries(APPLICANT_STATUS_LABELS).map(([key, { label, color }]) => {
+          const count = allFlat.filter((a) => a.status === key).length;
+          if (count === 0) return null;
+          return (
+            <div
+              key={key}
+              className="hs-postulados-stat"
+              style={{ cursor: "pointer", borderColor: filterStatus === key ? color : undefined }}
+              onClick={() => setFilterStatus(filterStatus === key ? "" : key)}
+            >
+              <span className="hs-mono hs-eyebrow" style={{ marginBottom: 4, color }}>// {key.toUpperCase()}</span>
+              <span className="hs-postulados-stat-value" style={{ color }}>{count}</span>
+              <span className="hs-postulados-stat-label">{label.toLowerCase()}</span>
+            </div>
+          );
+        })}
       </div>
 
-      {withApplicants.length === 0 ? (
-        <div className="hs-postulados-empty">
-          <span className="hs-mono">// SIN_POSTULACIONES_AÚN</span>
-          <p>Cuando alguien se postule a una de tus vacantes, aparecerá acá.</p>
-        </div>
-      ) : (
-        <div className="hs-postulados-list">
-          {withApplicants.map((v) => {
-            const isOpen = expanded === v._id;
-            const count  = v.applicants?.length ?? 0;
-            return (
-              <div key={v._id} className="hs-postulados-card">
-                <div
-                  className="hs-postulados-card-header"
-                  onClick={() => setExpanded(isOpen ? null : v._id)}
-                >
-                  <div className="hs-postulados-card-left">
-                    <span className="hs-mono" style={{ fontSize: "0.6rem", letterSpacing: 2 }}>// POSICIÓN</span>
-                    <h3 className="hs-postulados-card-title">{v.title}</h3>
-                  </div>
-                  <div className="hs-postulados-card-right">
-                    <span className="hs-postulados-count">
-                      {count >= 100 ? "+99" : count} postulado{count !== 1 ? "s" : ""}
-                    </span>
-                    <span className="hs-postulados-chevron">{isOpen ? "▲" : "▼"}</span>
-                  </div>
-                </div>
+      {/* Filtros */}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, alignItems: "center" }}>
+        <input
+          className="hs-filter-input"
+          placeholder="Buscar por nombre o email..."
+          value={filterSearch}
+          onChange={(e) => setFilterSearch(e.target.value)}
+          style={{ flex: 1, minWidth: 200 }}
+        />
+        <select
+          className="hs-filter-select"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="">Todos los estados</option>
+          {Object.entries(APPLICANT_STATUS_LABELS).map(([val, { label }]) => (
+            <option key={val} value={val}>{label}</option>
+          ))}
+        </select>
+        {hasFilters && (
+          <button
+            className="hs-action-btn"
+            style={{ fontSize: "0.6rem" }}
+            onClick={() => { setFilterStatus(""); setFilterSearch(""); }}
+          >
+            LIMPIAR
+          </button>
+        )}
+        {hasFilters && (
+          <span style={{ fontSize: "0.65rem", opacity: 0.5, fontFamily: "'JetBrains Mono',monospace" }}>
+            {filteredFlat.length} resultado{filteredFlat.length !== 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
 
-                {isOpen && (
-                  <div className="hs-postulados-applicants">
-                    {v.applicants.map((applicant, i) => {
-                      const statusInfo  = APPLICANT_STATUS_LABELS[applicant.status] ?? APPLICANT_STATUS_LABELS.pending;
-                      const isUpdating  = updatingStatus === `${v._id}-${applicant.userId}`;
-                      const displayName = (applicant as any).applicantName || applicant.userId;
-                      return (
-                        <div key={applicant.userId} className="hs-postulados-applicant-row">
-                          <span className="hs-postulados-applicant-num">#{i + 1}</span>
-                          <div className="hs-postulados-applicant-info">
-                            <span className="hs-postulados-applicant-uid">{displayName}</span>
-                            {applicant.appliedAt && (
-                              <span className="hs-postulados-applicant-date">
-                                {new Date(applicant.appliedAt).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" })}
-                              </span>
-                            )}
-                          </div>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-                            <button
-                              className="hs-action-btn hs-action-btn--accent"
-                              style={{ fontSize: "0.6rem", padding: "4px 10px" }}
-                              onClick={() => openCV(applicant.userId, displayName)}
-                            >
-                              VER CV
-                            </button>
-                            <button
-                              className="hs-action-btn"
-                              style={{ fontSize: "0.6rem", padding: "4px 10px" }}
-                              onClick={() => downloadCV(applicant.userId, displayName)}
-                            >
-                              ↓ PDF
-                            </button>
-                          </div>
-                          <div className="hs-postulados-applicant-status">
-                            <span className="hs-postulados-status-dot" style={{ background: statusInfo.color }} />
-                            <select
-                              className="hs-postulados-status-select"
-                              value={applicant.status}
-                              disabled={isUpdating}
-                              onChange={(e) => handleStatusChange(v._id, applicant.userId, e.target.value)}
-                              style={{ borderColor: statusInfo.color, color: statusInfo.color, opacity: isUpdating ? 0.5 : 1 }}
-                            >
-                              {Object.entries(APPLICANT_STATUS_LABELS).map(([val, { label }]) => (
-                                <option key={val} value={val}>{label}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+      {/* Vista filtrada — muestra todos flat con nombre de vacante */}
+      {hasFilters ? (
+        filteredFlat.length === 0 ? (
+          <div className="hs-postulados-empty">
+            <span className="hs-mono">// SIN_RESULTADOS</span>
+            <p>Ningún postulante coincide con los filtros aplicados.</p>
+          </div>
+        ) : (
+          <div className="hs-postulados-list">
+            <div className="hs-postulados-card" style={{ padding: "12px 0" }}>
+              <div className="hs-postulados-applicants" style={{ maxHeight: "none", padding: "0 22px" }}>
+                {filteredFlat.map((a, i) => renderApplicantRow(a, a.vacancyId, i, true))}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          </div>
+        )
+      ) : (
+        /* Vista normal — agrupada por vacante */
+        withApplicants.length === 0 ? (
+          <div className="hs-postulados-empty">
+            <span className="hs-mono">// SIN_POSTULACIONES_AÚN</span>
+            <p>Cuando alguien se postule a una de tus vacantes, aparecerá acá.</p>
+          </div>
+        ) : (
+          <div className="hs-postulados-list">
+            {withApplicants.map((v) => {
+              const isOpen = expanded === v._id;
+              const count  = v.applicants?.length ?? 0;
+              return (
+                <div key={v._id} className="hs-postulados-card">
+                  <div className="hs-postulados-card-header" onClick={() => setExpanded(isOpen ? null : v._id)}>
+                    <div className="hs-postulados-card-left">
+                      <span className="hs-mono" style={{ fontSize: "0.6rem", letterSpacing: 2 }}>// POSICIÓN</span>
+                      <h3 className="hs-postulados-card-title">{v.title}</h3>
+                    </div>
+                    <div className="hs-postulados-card-right">
+                      <span className="hs-postulados-count">
+                        {count >= 100 ? "+99" : count} postulado{count !== 1 ? "s" : ""}
+                      </span>
+                      <span className="hs-postulados-chevron">{isOpen ? "▲" : "▼"}</span>
+                    </div>
+                  </div>
+                  {isOpen && (
+                    <div className="hs-postulados-applicants">
+                      {v.applicants.map((applicant, i) => renderApplicantRow(applicant, v._id, i, false))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )
       )}
 
       {/* Modal ver CV */}
@@ -404,7 +525,6 @@ function PostuladosTab() {
                 const p = cvData.personalInfo ?? {};
                 return (
                   <div className="hs-cv-view">
-                    {/* Header */}
                     <div className="hs-cv-header">
                       {p.photo && <img src={p.photo} alt={p.firstName} className="hs-cv-photo" />}
                       <div className="hs-cv-header-info">
@@ -419,16 +539,14 @@ function PostuladosTab() {
                         </div>
                       </div>
                     </div>
-                    {/* Resumen */}
                     {p.summary && <div className="hs-cv-section"><span className="hs-cv-section-title">// RESUMEN</span><p className="hs-cv-text">{p.summary}</p></div>}
-                    {/* Experiencia */}
                     {(cvData.experience ?? []).length > 0 && (
                       <div className="hs-cv-section">
                         <span className="hs-cv-section-title">// EXPERIENCIA</span>
                         {cvData.experience.map((e: any, i: number) => (
                           <div key={i} className="hs-cv-entry">
                             <div className="hs-cv-entry-header">
-                              <div><strong>{e.position}</strong> <span style={{ opacity: 0.6 }}>· {e.company}</span></div>
+                              <div><strong>{e.position}</strong> <span style={{ opacity: 0.6 }}>· {e.company}{e.location ? `, ${e.location}` : ""}</span></div>
                               <span style={{ fontSize: "0.72rem", opacity: 0.4 }}>{e.startDate}{e.startDate && " — "}{e.current ? "Actualidad" : e.endDate}</span>
                             </div>
                             {e.description && <p className="hs-cv-text">{e.description}</p>}
@@ -436,7 +554,19 @@ function PostuladosTab() {
                         ))}
                       </div>
                     )}
-                    {/* Skills */}
+                    {(cvData.education ?? []).length > 0 && (
+                      <div className="hs-cv-section">
+                        <span className="hs-cv-section-title">// EDUCACIÓN</span>
+                        {cvData.education.map((e: any, i: number) => (
+                          <div key={i} className="hs-cv-entry">
+                            <div className="hs-cv-entry-header">
+                              <div><strong>{e.degree}{e.field ? ` — ${e.field}` : ""}</strong> <span style={{ opacity: 0.6 }}>· {e.institution}</span></div>
+                              <span style={{ fontSize: "0.72rem", opacity: 0.4 }}>{e.startDate}{e.startDate && " — "}{e.current ? "Actualidad" : e.endDate}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {(cvData.skills ?? []).length > 0 && (
                       <div className="hs-cv-section">
                         <span className="hs-cv-section-title">// SKILLS</span>
@@ -447,7 +577,23 @@ function PostuladosTab() {
                         </div>
                       </div>
                     )}
-                    {/* Certificaciones */}
+                    {(cvData.projects ?? []).length > 0 && (
+                      <div className="hs-cv-section">
+                        <span className="hs-cv-section-title">// PROYECTOS</span>
+                        {cvData.projects.map((proj: any, i: number) => (
+                          <div key={i} className="hs-cv-entry">
+                            <div className="hs-cv-entry-header">
+                              <strong>{proj.name}</strong>
+                              <div style={{ display: "flex", gap: 8 }}>
+                                {proj.url     && <a href={proj.url}     target="_blank" rel="noreferrer" className="cvp-link" style={{ color: "var(--h-accent)", fontSize: "0.7rem" }}>Demo</a>}
+                                {proj.repoUrl && <a href={proj.repoUrl} target="_blank" rel="noreferrer" className="cvp-link" style={{ color: "var(--h-accent)", fontSize: "0.7rem" }}>Repo</a>}
+                              </div>
+                            </div>
+                            {proj.description && <p className="hs-cv-text">{proj.description}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {(cvData.certifications ?? []).length > 0 && (
                       <div className="hs-cv-section">
                         <span className="hs-cv-section-title">// CERTIFICACIONES</span>
@@ -461,11 +607,24 @@ function PostuladosTab() {
                         ))}
                       </div>
                     )}
-                    {/* Disponibilidad */}
+                    {(cvData.languages ?? []).length > 0 && (
+                      <div className="hs-cv-section">
+                        <span className="hs-cv-section-title">// IDIOMAS</span>
+                        <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 8 }}>
+                          {cvData.languages.map((l: any, i: number) => (
+                            <div key={i}>
+                              <div style={{ fontWeight: 900, fontSize: "0.85rem", textTransform: "uppercase" }}>{l.language}</div>
+                              <div style={{ fontSize: "0.68rem", opacity: 0.5, letterSpacing: 1 }}>{l.level}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {cvData.availability && (
                       <div className="hs-cv-section">
                         <span className="hs-cv-section-title">// DISPONIBILIDAD</span>
-                        <p className="hs-cv-text" style={{ color: "var(--h-accent)" }}>{cvData.availability}
+                        <p className="hs-cv-text" style={{ color: "var(--h-accent)" }}>
+                          {cvData.availability}
                           {cvData.workPreferences?.modality?.length > 0 && ` · ${cvData.workPreferences.modality.join(", ")}`}
                           {(cvData.workPreferences?.salaryMin || cvData.workPreferences?.salaryMax) &&
                             ` · ${cvData.workPreferences.currency} ${cvData.workPreferences.salaryMin?.toLocaleString("es-AR") ?? ""}${cvData.workPreferences.salaryMin && cvData.workPreferences.salaryMax ? " — " : ""}${cvData.workPreferences.salaryMax?.toLocaleString("es-AR") ?? ""}`}
@@ -492,7 +651,7 @@ const EnterpriseDashboard = () => {
   const [activeTab,       setActiveTab]       = useState("vacancy");
   const [toast,           setToast]           = useState<{ msg: string; color: string; bg: string } | null>(null);
   const [applicantCount,  setApplicantCount]  = useState(0);
-  const [/* newApplicants, */,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
+  const [/* newApplicants */,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
 
   const audioCtxRef        = useRef<AudioContext | null>(null);
   const toastTimerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -549,7 +708,7 @@ const EnterpriseDashboard = () => {
     setToast({ msg, color, bg });
     playSound();
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => setToast(null), 15000);
+    toastTimerRef.current = setTimeout(() => setToast(null), 150000000);
   }, [playSound]);
 
   useEffect(() => { showToastRef.current = showToast; }, [showToast]);

@@ -1,4 +1,323 @@
+/* ══════════════════════════════════════════════════════════════
+   home.css — Hidden Security Hero
+   3 fases: info flotante → mask explosion → reveal texto
+══════════════════════════════════════════════════════════════ */
+
+/* ── Base ────────────────────────────────────────────────────── */
 .mask-page {
+  width:            100%;
+  background-color: #000000;
+}
+
+.container {
+  position: relative;
+  width:    100%;
+  height:   100vh;
+  overflow: hidden;
+}
+
+/* ── CAPA 1: Matrix canvas ───────────────────────────────────── */
+.matrix-underlay {
+  position: absolute;
+  inset:    0;
+  z-index:  1;
+}
+
+.matrix-underlay canvas {
+  display:    block;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+}
+
+/* ── Scanline flash (FASE 2) ─────────────────────────────────── */
+.mask-scanline {
+  position:   absolute;
+  inset:      0;
+  z-index:    2;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(204, 255, 0, 0.04) 2px,
+    rgba(204, 255, 0, 0.04) 4px
+  );
+  pointer-events: none;
+  opacity:        0;
+}
+
+.container.light .mask-scanline {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 85, 0, 0.04) 2px,
+    rgba(255, 85, 0, 0.04) 4px
+  );
+}
+
+/* ── Glitch layer (FASE 2) ───────────────────────────────────── */
+.mask-glitch-layer {
+  position:       absolute;
+  inset:          0;
+  z-index:        2;
+  background:     transparent;
+  mix-blend-mode: exclusion;
+  pointer-events: none;
+  opacity:        0;
+}
+
+/* ── Vignette de esquinas ────────────────────────────────────── */
+.mask-vignette {
+  position:       absolute;
+  inset:          0;
+  z-index:        2;
+  background:     radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+.container.light .mask-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(240, 240, 240, 0.55) 100%
+  );
+}
+
+/* ── CAPA 2: Texto central (FASE 3) ──────────────────────────── */
+.matrix-content-overlay {
+  position:       absolute;
+  inset:          0;
+  display:        flex;
+  justify-content: center;
+  align-items:    center;
+  z-index:        6;  /* encima de la máscara z-index:4 */
+  pointer-events: none;
+}
+
+.matrix-welcome-inner {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  text-align:     center;
+  gap:            16px;
+  opacity:        0; /* GSAP controla */
+  padding:        0 24px;
+}
+
+/* Eyebrow */
+.matrix-welcome-eyebrow {
+  font-family:    'JetBrains Mono', monospace;
+  font-size:      0.7rem;
+  font-weight:    800;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+
+.container.dark  .matrix-welcome-eyebrow { color: rgba(204, 255, 0, 0.7); }
+.container.light .matrix-welcome-eyebrow { color: rgba(255, 85, 0, 0.7);  }
+
+/* Línea separadora — se dibuja con scaleX vía GSAP */
+.matrix-welcome-line {
+  width:            120px;
+  height:           1px;
+  transform-origin: left center;
+  transform:        scaleX(0);
+}
+
+.container.dark  .matrix-welcome-line { background: rgba(204, 255, 0, 0.4); }
+.container.light .matrix-welcome-line { background: rgba(255, 85, 0, 0.4);  }
+
+/* Título principal */
+.matrix-welcome-title {
+  font-family:    'Montserrat', sans-serif;
+  font-weight:    900;
+  font-size:      clamp(2rem, 5vw, 4rem);
+  text-align:     center;
+  line-height:    1.05;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  margin:         0;
+}
+
+.container.dark  .matrix-welcome-title { color: #ffffff; }
+.container.light .matrix-welcome-title { color: #000000; }
+
+/* Subtítulo */
+.matrix-welcome-sub {
+  font-family:    'Montserrat', sans-serif;
+  font-size:      clamp(0.7rem, 1.2vw, 0.85rem);
+  font-weight:    600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin:         0;
+}
+
+.container.dark  .matrix-welcome-sub { color: rgb(255, 255, 255); }
+.container.light .matrix-welcome-sub { color: rgb(0, 0, 0);       }
+
+/* ── CAPA 3: Máscara de texto ─────────────────────────────────── */
+.mask {
+  position:        absolute;
+  inset:           0;
+  height:          100vh;
+  width:           100%;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  z-index:         4;
+}
+
+.container.dark .mask {
+  background-color: #000000;
+  mix-blend-mode:   darken;
+}
+
+.container.light .mask {
+  background-color: #f8f8f8;
+  mix-blend-mode:   screen;
+}
+
+.container.dark  .home-title-mask { color: #ffffff; }
+.container.light .home-title-mask { color: #000000; }
+
+.home-title-mask {
+  font-family:    'Montserrat', sans-serif;
+  font-weight:    900;
+  font-size:      clamp(52px, 9vw, 120px);
+  text-align:     center;
+  letter-spacing: -2px;
+  line-height:    0.9;
+  text-transform: uppercase;
+  user-select:    none;
+  /* Sin will-change para evitar artifacts del blend mode */
+}
+
+/* ── Info flotante (FASE 1) ──────────────────────────────────── */
+.hero-floating-info {
+  position:       absolute;
+  bottom:         10%;
+  left:           6%;
+  z-index:        5;
+  max-width:      360px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  color:          white;
+  display:        flex;
+  flex-direction: column;
+  gap:            14px;
+  opacity:        0; /* GSAP controla */
+}
+
+.info-badge {
+  font-family:    'JetBrains Mono', monospace;
+  font-size:      11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-weight:    800;
+}
+
+.info-desc {
+  font-family:    'Montserrat', sans-serif;
+  font-size:      clamp(14px, 2vw, 18px);
+  font-weight:    300;
+  letter-spacing: 2px;
+  line-height:    1.4;
+  text-transform: uppercase;
+  margin:         0;
+}
+
+/* ── Indicador scroll ────────────────────────────────────────── */
+.scroll-indicator {
+  display:     flex;
+  align-items: center;
+  gap:         14px;
+}
+
+.scroll-indicator span {
+  font-family:    'JetBrains Mono', monospace;
+  font-size:      10px;
+  font-weight:    800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color:          white;
+}
+
+.scroll-indicator .line {
+  width:    60px;
+  height:   1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.container.dark  .scroll-indicator .line { background: rgba(255, 255, 255, 0.15); }
+.container.light .scroll-indicator .line { background: rgba(0, 0, 0, 0.15);       }
+
+.scroll-indicator .line::after {
+  content:   "";
+  position:  absolute;
+  top:       0;
+  left:      0;
+  width:     100%;
+  height:    100%;
+  animation: scrollLineAnim 1.8s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+.container.dark  .scroll-indicator .line::after { background: #ccff00; }
+.container.light .scroll-indicator .line::after { background: #ff5500; }
+
+@keyframes scrollLineAnim {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%);  }
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+/* Tablet 1024 */
+@media (max-width: 1024px) {
+  .matrix-welcome-title { letter-spacing: -1px; }
+  .home-title-mask      { letter-spacing: -1px; }
+  .hero-floating-info   { left: 5%; bottom: 9%; }
+}
+
+/* Mobile 768 */
+@media (max-width: 768px) {
+  .home-title-mask {
+    font-size:      clamp(36px, 11vw, 52px);
+    letter-spacing: -0.5px;
+  }
+
+  .matrix-welcome-title {
+    font-size:      clamp(1.6rem, 7vw, 2.2rem);
+    letter-spacing: -0.5px;
+  }
+
+  .matrix-welcome-sub { font-size: 0.62rem; letter-spacing: 1.5px; }
+
+  .hero-floating-info {
+    bottom:    8%;
+    left:      5%;
+    right:     5%;
+    max-width: 100%;
+  }
+
+  .info-desc   { font-size: 13px; }
+  .info-badge  { font-size: 10px; }
+}
+
+/* Mobile pequeño 480 */
+@media (max-width: 480px) {
+  .home-title-mask { font-size: clamp(28px, 12vw, 35px); }
+  .matrix-welcome-title { font-size: 1.4rem; }
+  .scroll-indicator { display: none; }
+}
+
+/* ANTERIOR */
+/* .mask-page {
     width: 100%;
     background-color: #000000;
 }
@@ -10,7 +329,6 @@
     overflow: hidden;
 }
 
-/* --- CAPA 1: EL FONDO (MATRIX) --- */
 .matrix-underlay {
     position: absolute;
     top: 0;
@@ -27,14 +345,13 @@
     object-fit: cover;
 }
 
-/* --- TEXTO CENTRAL REVELADO --- */
 .matrix-content-overlay {
     position: absolute;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2; /* Encima del canvas, debajo de la máscara */
+    z-index: 2; 
     pointer-events: none;
 }
 
@@ -45,13 +362,12 @@
     text-align: center;
     line-height: 1.1;
     margin: 0;
-    opacity: 0; /* Controlado por GSAP */
+    opacity: 0; 
 }
 
 .container.dark .matrix-welcome-title { color: #ffffff; }
 .container.light .matrix-welcome-title { color: #000000; }
 
-/* --- CAPA 2: LA MÁSCARA --- */
 .mask {
     position: absolute;
     inset: 0;
@@ -60,7 +376,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3; /* Encima de todo lo anterior */
+    z-index: 3; 
 }
 
 .container.light .mask {
@@ -91,7 +407,6 @@
     text-transform: uppercase;
 }
 
-/* --- INFO FLOTANTE --- */
 .hero-floating-info {
     position: absolute;
     bottom: 10%;
@@ -121,7 +436,6 @@
     text-transform: uppercase;
 }
 
-/* --- INDICADOR DE SCROLL --- */
 .scroll-indicator span {
     font-family: 'Montserrat', sans-serif;
     color: white; 
@@ -160,4 +474,4 @@
 @media (max-width: 768px) {
     .home-title-mask { font-size: 45px; }
     .matrix-welcome-title { font-size: 2rem; }
-}
+} */

@@ -106,7 +106,7 @@
   padding-bottom:  24px;
   margin-bottom:   24px;
   border-bottom:   2px solid;
-  border-image:    linear-gradient(90deg, #62e81a 0%, var(--dm-border) 100%) 1;
+  border-image:    linear-gradient(90deg, #ccff00 0%, var(--dm-border) 100%) 1;
   animation:       dm-fade-in 0.4s ease;
 }
 
@@ -1186,6 +1186,218 @@
 .dm-container.light .dm-tab.active {
   color:              #ff5500;
   border-bottom-color: #ff5500;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MEMBERSHIP BLOCK — agregar a userDashboard.css
+   Reemplaza .dm-stats
+══════════════════════════════════════════════════════════════ */
+
+/* ── WRAPPER ─────────────────────────────────────────────────── */
+.dm-membership-block {
+    margin:     0 0 24px;
+    transition: all 0.3s ease;
+}
+
+.dm-membership-loading {
+    display:         flex;
+    align-items:     center;
+    gap:             6px;
+    padding:         24px 0;
+    justify-content: center;
+}
+
+/* ── ALERTA VENCIMIENTO < 7 DÍAS ─────────────────────────────── */
+.dm-expiry-alert {
+    display:     flex;
+    align-items: center;
+    gap:         10px;
+    padding:     12px 16px;
+    background:  rgba(234,179,8,0.08);
+    border:      1px solid rgba(234,179,8,0.3);
+    border-left: 3px solid #eab308;
+    margin-bottom: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size:   0.78rem;
+    color:       #eab308;
+    animation:   dm-pulse-alert 2s ease-in-out infinite;
+}
+
+.dm-expiry-alert-icon {
+    font-size:   1rem;
+    flex-shrink: 0;
+}
+
+.dm-expiry-alert-link {
+    color:           #eab308;
+    font-weight:     700;
+    text-decoration: underline;
+    letter-spacing:  0.05em;
+}
+.dm-expiry-alert-link:hover { opacity: 0.75; }
+
+@keyframes dm-pulse-alert {
+    0%, 100% { border-left-color: #eab308; }
+    50%       { border-left-color: rgba(234,179,8,0.4); }
+}
+
+/* ── GRID DE CARDS ───────────────────────────────────────────── */
+.dm-membership-grid {
+    display:   grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:       2px;
+}
+
+/* ── CARD BASE ───────────────────────────────────────────────── */
+.dm-membership-card {
+    display:        flex;
+    flex-direction: column;
+    gap:            6px;
+    padding:        20px 24px;
+    background:     var(--dm-surface, #111);
+    border-top:     2px solid var(--dm-accent, #ccff00);
+    position:       relative;
+    overflow:       hidden;
+}
+
+/* separador entre cards */
+.dm-membership-card + .dm-membership-card {
+    border-left: 1px solid var(--dm-border, rgba(255,255,255,0.06));
+}
+
+/* ── LABEL ───────────────────────────────────────────────────── */
+.dm-membership-card-label {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      0.58rem;
+    font-weight:    700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color:          var(--dm-muted, rgba(255,255,255,0.4));
+}
+
+/* ── PLAN NAME ───────────────────────────────────────────────── */
+.dm-membership-plan-name {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      1.5rem;
+    font-weight:    900;
+    letter-spacing: -0.5px;
+    color:          var(--dm-accent, #ccff00);
+    line-height:    1;
+}
+
+.dm-membership-expires {
+    font-family: 'Montserrat', sans-serif;
+    font-size:   0.68rem;
+    font-weight: 400;
+    color:       var(--dm-muted, rgba(255,255,255,0.35));
+    margin-top:  2px;
+}
+
+/* ── TIEMPO ──────────────────────────────────────────────────── */
+.dm-membership-time-value {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      1.1rem;
+    font-weight:    800;
+    letter-spacing: 0.02em;
+    color:          var(--dm-text, #f0f0f0);
+    line-height:    1.1;
+}
+
+.dm-membership-time-detail {
+    font-family: 'Montserrat', sans-serif;
+    font-size:   0.68rem;
+    color:       var(--dm-muted, rgba(255,255,255,0.35));
+    margin-top:  2px;
+}
+
+/* urgente — menos de 7 días */
+.dm-time-urgent .dm-membership-time-value { color: #eab308; }
+.dm-time-urgent { border-top-color: #eab308 !important; }
+
+/* ── VOUCHERS ────────────────────────────────────────────────── */
+.dm-membership-voucher-count {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      2rem;
+    font-weight:    900;
+    color:          var(--dm-accent, #ccff00);
+    line-height:    1;
+}
+
+.dm-membership-voucher-label {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      0.6rem;
+    font-weight:    700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color:          var(--dm-muted, rgba(255,255,255,0.35));
+}
+
+.dm-voucher-empty .dm-membership-voucher-count { color: var(--dm-muted, rgba(255,255,255,0.25)); }
+.dm-voucher-empty .dm-membership-voucher-label { color: var(--dm-muted, rgba(255,255,255,0.2)); }
+
+/* ── EMPTY STATE ─────────────────────────────────────────────── */
+.dm-membership-empty {
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    gap:             10px;
+    padding:         32px;
+    background:      var(--dm-surface, #111);
+    border-top:      2px solid var(--dm-border, rgba(255,255,255,0.07));
+    text-align:      center;
+}
+
+.dm-membership-empty-icon {
+    font-size: 1.5rem;
+    opacity:   0.3;
+}
+
+.dm-membership-empty-text {
+    font-family:    'Montserrat', sans-serif;
+    font-size:      0.7rem;
+    font-weight:    700;
+    letter-spacing: 2px;
+    color:          var(--dm-muted, rgba(255,255,255,0.3));
+    text-transform: uppercase;
+}
+
+.dm-membership-cta {
+    font-family:     'Montserrat', sans-serif;
+    font-size:       0.7rem;
+    font-weight:     700;
+    letter-spacing:  1.5px;
+    color:           var(--dm-accent, #ccff00);
+    text-decoration: none;
+    border:          1px solid var(--dm-accent, #ccff00);
+    padding:         6px 16px;
+    transition:      all 0.2s;
+}
+.dm-membership-cta:hover {
+    background: var(--dm-accent, #ccff00);
+    color:      #000;
+}
+
+/* ── LIGHT MODE ──────────────────────────────────────────────── */
+.dm-container.light .dm-membership-card {
+    background: #fff;
+    border-top-color: #ff5500;
+}
+.dm-container.light .dm-membership-plan-name  { color: #ff5500; }
+.dm-container.light .dm-membership-voucher-count { color: #ff5500; }
+.dm-container.light .dm-membership-cta        { color: #ff5500; border-color: #ff5500; }
+.dm-container.light .dm-membership-cta:hover  { background: #ff5500; color: #fff; }
+.dm-container.light .dm-membership-card-label { color: rgba(0,0,0,0.4); }
+.dm-container.light .dm-membership-expires    { color: rgba(0,0,0,0.35); }
+.dm-container.light .dm-membership-time-detail { color: rgba(0,0,0,0.35); }
+.dm-container.light .dm-membership-time-value  { color: #111; }
+.dm-container.light .dm-membership-voucher-label { color: rgba(0,0,0,0.35); }
+.dm-container.light .dm-membership-card + .dm-membership-card { border-left-color: rgba(0,0,0,0.08); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .dm-membership-grid { grid-template-columns: 1fr; gap: 2px; }
+    .dm-membership-card + .dm-membership-card { border-left: none; border-top: 1px solid var(--dm-border, rgba(255,255,255,0.06)); }
+    .dm-container.light .dm-membership-card + .dm-membership-card { border-top-color: rgba(0,0,0,0.08); }
 }
 
 /* ── TABLET 1024px ───────────────────────────────────────────── */

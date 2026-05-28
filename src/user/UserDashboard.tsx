@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import "./userDashboard.css";
-import { UseSession } from "../contexts/SessionContext";
-import { UseTheme } from "../contexts/ThemeContext";
-import { UseShopping } from "../contexts/ShoppingContext";
-import JobBoard from "./JobBoard";
+import { UseSession }   from "../contexts/SessionContext";
+import { UseTheme }     from "../contexts/ThemeContext";
+import { UseShopping }  from "../contexts/ShoppingContext";
+import { useMembership, formatDaysLeft } from "../contexts/UsePlanAccess";
+import JobBoard  from "./JobBoard";
 import CvBuilder from "./CvBuilder";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,26 +21,130 @@ interface UserNotification {
   read:         boolean;
 }
 
-// ─── Labels de estado ─────────────────────────────────────────────────────────
 const APP_STATUS: Record<string, { label: string; color: string; bg: string; toastMsg: string }> = {
-  pending:  { label: "Postulación enviada",              color: "#94a3b8", bg: "rgba(148,163,184,0.1)", toastMsg: "Tu postulación fue recibida"             },
-  cv_read:  { label: "Tu CV fue leído",                  color: "#38bdf8", bg: "rgba(56,189,248,0.1)",  toastMsg: "Una empresa leyó tu CV"                  },
-  filter_1: { label: "Pasaste el filtro 1 ✓",            color: "#a78bfa", bg: "rgba(167,139,250,0.1)", toastMsg: "¡Pasaste el primer filtro!"               },
-  filter_2: { label: "Pasaste el filtro 2 ✓",            color: "#818cf8", bg: "rgba(129,140,248,0.1)", toastMsg: "¡Pasaste el segundo filtro!"              },
-  filter_3: { label: "Pasaste el filtro 3 ✓",            color: "#6366f1", bg: "rgba(99,102,241,0.1)",  toastMsg: "¡Pasaste el tercer filtro!"               },
-  contact:  { label: "La empresa se contactará contigo", color: "#22c55e", bg: "rgba(34,197,94,0.1)",   toastMsg: "¡La empresa se va a contactar con vos!"   },
-  rejected: { label: "No fuiste seleccionado",           color: "#f43f5e", bg: "rgba(244,63,94,0.1)",   toastMsg: "Tu postulación no fue seleccionada"        },
+  pending:  { label: "Postulación enviada",              color: "#94a3b8", bg: "rgba(148,163,184,0.1)", toastMsg: "Tu postulación fue recibida"           },
+  cv_read:  { label: "Tu CV fue leído",                  color: "#38bdf8", bg: "rgba(56,189,248,0.1)",  toastMsg: "Una empresa leyó tu CV"                },
+  filter_1: { label: "Pasaste el filtro 1 ✓",            color: "#a78bfa", bg: "rgba(167,139,250,0.1)", toastMsg: "¡Pasaste el primer filtro!"             },
+  filter_2: { label: "Pasaste el filtro 2 ✓",            color: "#818cf8", bg: "rgba(129,140,248,0.1)", toastMsg: "¡Pasaste el segundo filtro!"            },
+  filter_3: { label: "Pasaste el filtro 3 ✓",            color: "#6366f1", bg: "rgba(99,102,241,0.1)",  toastMsg: "¡Pasaste el tercer filtro!"             },
+  contact:  { label: "La empresa se contactará contigo", color: "#22c55e", bg: "rgba(34,197,94,0.1)",   toastMsg: "¡La empresa se va a contactar con vos!" },
+  rejected: { label: "No fuiste seleccionado",           color: "#f43f5e", bg: "rgba(244,63,94,0.1)",   toastMsg: "Tu postulación no fue seleccionada"     },
 };
 
-// Notas por tipo de estado — positivos suben, negativo baja
 const STATUS_NOTES: Record<string, { freq: number; delay: number }[]> = {
   cv_read:  [{ freq: 660, delay: 0 }, { freq: 880, delay: 0.12 }],
   filter_1: [{ freq: 660, delay: 0 }, { freq: 880, delay: 0.12 }, { freq: 1100, delay: 0.24 }],
   filter_2: [{ freq: 660, delay: 0 }, { freq: 880, delay: 0.12 }, { freq: 1100, delay: 0.24 }, { freq: 1320, delay: 0.36 }],
   filter_3: [{ freq: 660, delay: 0 }, { freq: 880, delay: 0.12 }, { freq: 1100, delay: 0.24 }, { freq: 1320, delay: 0.36 }, { freq: 1760, delay: 0.48 }],
   contact:  [{ freq: 523, delay: 0 }, { freq: 659, delay: 0.1  }, { freq: 784, delay: 0.2  }, { freq: 1047, delay: 0.3 }],
-  rejected: [{ freq: 330, delay: 0 }, { freq: 262, delay: 0.2 }],
+  rejected: [{ freq: 330, delay: 0 }, { freq: 262, delay: 0.2  }],
   default:  [{ freq: 523, delay: 0 }],
+};
+
+const PLAN_LABELS: Record<string, string> = {
+  starter:  "STARTER",
+  pro:      "PRO",
+  elite:    "ELITE",
+  b2b_seis: "B2B CORE",
+  b2b_doce: "B2B ENTERPRISE",
+};
+
+// Planes en orden de jerarquía
+const TIMED_PLANS = ["elite", "b2b_doce", "pro", "b2b_seis", "starter"];
+
+// ─── Sub-componente: bloque membresía ─────────────────────────────────────────
+// Una sola llamada a /api/refresh-claims — useMembership lo centraliza
+const MembershipBlock = () => {
+    const { loading, plans, voucherCount } = useMembership();
+
+    // Plan activo de mayor jerarquía
+    const activePlan     = TIMED_PLANS.find(p => plans[p]?.hasAccess);
+    const activePlanData = activePlan ? plans[activePlan] : null;
+    const daysLeft       = activePlanData?.daysLeft ?? null;
+    const expiresAt      = activePlanData?.expiresAt ?? null;
+    const isExpiring     = daysLeft !== null && daysLeft <= 7 && daysLeft > 0;
+    const hasVoucher     = voucherCount > 0;
+
+    if (loading) {
+        return (
+            <div className="dm-membership-block dm-membership-loading">
+                <span className="dm-loading-dot" /><span className="dm-loading-dot" /><span className="dm-loading-dot" />
+            </div>
+        );
+    }
+
+    if (!activePlan && !hasVoucher) {
+        return (
+            <div className="dm-membership-block dm-membership-empty">
+                <span className="dm-membership-empty-icon">◫</span>
+                <span className="dm-membership-empty-text">SIN_PLAN_ACTIVO</span>
+                <a href="/pricing" className="dm-membership-cta">VER PLANES →</a>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`dm-membership-block ${isExpiring ? "dm-membership-expiring" : ""}`}>
+
+            {/* Alerta < 7 días */}
+            {isExpiring && (
+                <div className="dm-expiry-alert">
+                    <span className="dm-expiry-alert-icon">⚠</span>
+                    <span>
+                        TU PLAN VENCE EN <strong>{daysLeft} DÍA{daysLeft !== 1 ? "S" : ""}</strong> —{" "}
+                        <a href="/pricing" className="dm-expiry-alert-link">RENOVAR AHORA</a>
+                    </span>
+                </div>
+            )}
+
+            <div className="dm-membership-grid">
+
+                {/* Plan activo */}
+                {activePlan && (
+                    <div className="dm-membership-card dm-membership-card--plan">
+                        <span className="dm-membership-card-label">MEMBRESÍA ACTIVA</span>
+                        <span className="dm-membership-plan-name">{PLAN_LABELS[activePlan]}</span>
+                        {expiresAt && (
+                            <span className="dm-membership-expires">
+                                Vence: {expiresAt.toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" })}
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {/* Tiempo restante */}
+                {daysLeft !== null && (
+                    <div className={`dm-membership-card dm-membership-card--time ${isExpiring ? "dm-time-urgent" : ""}`}>
+                        <span className="dm-membership-card-label">TIEMPO RESTANTE</span>
+                        <span className="dm-membership-time-value">{formatDaysLeft(daysLeft)}</span>
+                        {daysLeft > 0 && (
+                            <span className="dm-membership-time-detail">
+                                {daysLeft >= 30
+                                    ? `${Math.floor(daysLeft / 30)} mes${Math.floor(daysLeft / 30) > 1 ? "es" : ""} y ${daysLeft % 30} día${daysLeft % 30 !== 1 ? "s" : ""}`
+                                    : `${daysLeft} día${daysLeft !== 1 ? "s" : ""}`
+                                }
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {/* Vouchers — count real desde purchases[] del backend */}
+                <div className={`dm-membership-card dm-membership-card--voucher ${!hasVoucher ? "dm-voucher-empty" : ""}`}>
+                    <span className="dm-membership-card-label">VOUCHERS DE EXAMEN</span>
+                    <span className="dm-membership-voucher-count">{voucherCount}</span>
+                    <span className="dm-membership-voucher-label">
+                        {voucherCount === 0
+                            ? "SIN_VOUCHERS"
+                            : voucherCount === 1
+                                ? "DISPONIBLE"
+                                : "DISPONIBLES"
+                        }
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    );
 };
 
 // ─── UserDashboard ────────────────────────────────────────────────────────────
@@ -55,123 +160,92 @@ const UserDashboard = () => {
     const [toast,         setToast]         = useState<{ msg: string; color: string; bg: string } | null>(null);
     const [cvProfile,     setCvProfile]     = useState<{ firstName: string; lastName: string; photo: string } | null>(null);
 
-    const sseRef       = useRef<EventSource | null>(null);
-    const audioCtxRef  = useRef<AudioContext | null>(null);
+    const sseRef        = useRef<EventSource | null>(null);
+    const audioCtxRef   = useRef<AudioContext | null>(null);
     const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const activeTabRef = useRef(activeTab);
+    const activeTabRef  = useRef(activeTab);
     useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
 
     useEffect(() => {
         if (user && user.email) getPurchased(user.email);
     }, [user?.email, user]);
 
-    // Cargar datos del CV para el hero
     useEffect(() => {
         if (!user) return;
         axios.get(`${import.meta.env.VITE_API_URL}/api/cv/me`, { withCredentials: true })
             .then(({ data }) => {
                 if (data.data?.personalInfo) {
                     const { firstName, lastName, photo } = data.data.personalInfo;
-                    if (firstName || lastName || photo) {
+                    if (firstName || lastName || photo)
                         setCvProfile({ firstName: firstName ?? "", lastName: lastName ?? "", photo: photo ?? "" });
-                    }
                 }
             })
             .catch(() => {});
     }, [user]);
 
-    // Inicializar AudioContext en el primer click — requerido por los browsers
     useEffect(() => {
         const init = () => {
-            if (!audioCtxRef.current) {
+            if (!audioCtxRef.current)
                 audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-            }
-            if (audioCtxRef.current.state === "suspended") {
-                audioCtxRef.current.resume();
-            }
+            if (audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
             document.removeEventListener("click", init);
         };
         document.addEventListener("click", init);
         return () => document.removeEventListener("click", init);
     }, []);
 
-    // ── Sonido ────────────────────────────────────────────────────────────────
     const playSound = useCallback((notes: { freq: number; delay: number }[]) => {
         try {
             if (!audioCtxRef.current)
                 audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
             const ctx = audioCtxRef.current;
             notes.forEach(({ freq, delay }) => {
-                const osc  = ctx.createOscillator();
-                const gain = ctx.createGain();
-                const t    = ctx.currentTime + delay;
-                const dur  = 0.4;
+                const osc = ctx.createOscillator(), gain = ctx.createGain();
+                const t = ctx.currentTime + delay, dur = 0.4;
                 osc.connect(gain); gain.connect(ctx.destination);
                 osc.type = "sine"; osc.frequency.value = freq;
                 gain.gain.setValueAtTime(0, t);
-                gain.gain.linearRampToValueAtTime(0.2, t + 0.02);
-                gain.gain.linearRampToValueAtTime(0.15, t + 0.1);
+                gain.gain.linearRampToValueAtTime(0.2,   t + 0.02);
+                gain.gain.linearRampToValueAtTime(0.15,  t + 0.1);
                 gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
                 osc.start(t); osc.stop(t + dur);
             });
         } catch (e) { console.error("Audio error:", e); }
     }, []);
 
-    // ── Toast ─────────────────────────────────────────────────────────────────
     const showToast = useCallback((msg: string, color: string, bg: string) => {
         setToast({ msg, color, bg });
         if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
         toastTimerRef.current = setTimeout(() => setToast(null), 6000);
     }, []);
 
-    // ── SSE notificaciones ────────────────────────────────────────────────────
     useEffect(() => {
         if (!user?.userCertificated) return;
-
         const connect = () => {
             if (sseRef.current) sseRef.current.close();
-            const es = new EventSource(
-                `${import.meta.env.VITE_API_URL}/api/user/notifications/stream`,
-                { withCredentials: true }
-            );
-
+            const es = new EventSource(`${import.meta.env.VITE_API_URL}/api/user/notifications/stream`, { withCredentials: true });
             es.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
                     if (data.type !== "application_status") return;
-
                     const statusInfo = APP_STATUS[data.status] ?? APP_STATUS.pending;
                     const notes      = STATUS_NOTES[data.status] ?? STATUS_NOTES.default;
-
                     const notif: UserNotification = {
-                        id:           `${Date.now()}-${Math.random()}`,
-                        type:         data.type,
-                        vacancyId:    data.vacancyId,
-                        vacancyTitle: data.vacancyTitle,
-                        companyName:  data.companyName ?? null,
-                        companyLogo:  data.companyLogo ?? null,
-                        status:       data.status,
-                        createdAt:    data.createdAt,
-                        read:         activeTabRef.current === "notif",
+                        id: `${Date.now()}-${Math.random()}`, type: data.type,
+                        vacancyId: data.vacancyId, vacancyTitle: data.vacancyTitle,
+                        companyName: data.companyName ?? null, companyLogo: data.companyLogo ?? null,
+                        status: data.status, createdAt: data.createdAt,
+                        read: activeTabRef.current === "notif",
                     };
-
                     setNotifications((prev) => [notif, ...prev].slice(0, 50));
                     if (activeTabRef.current !== "notif") setUnreadCount((prev) => prev + 1);
-
-                    // Sonido y toast visual
                     playSound(notes);
-                    showToast(
-                        `${statusInfo.toastMsg} — ${data.vacancyTitle}`,
-                        statusInfo.color,
-                        statusInfo.bg
-                    );
+                    showToast(`${statusInfo.toastMsg} — ${data.vacancyTitle}`, statusInfo.color, statusInfo.bg);
                 } catch (e) { console.error("SSE notif parse error:", e); }
             };
-
             es.onerror = () => { es.close(); setTimeout(connect, 5000); };
             sseRef.current = es;
         };
-
         connect();
         return () => { sseRef.current?.close(); sseRef.current = null; };
     }, [user, playSound, showToast]); // eslint-disable-line
@@ -185,8 +259,6 @@ const UserDashboard = () => {
     };
 
     const purchases    = Array.isArray(purchased) ? purchased : [];
-    const totalGastado = purchases.filter(p => p.status === "approved").reduce((acc, p) => acc + (p.calculo?.totalFinal ?? p.amount), 0);
-    const totalOrdenes = purchases.filter(p => p.status === "approved").length;
     const ultimaCompra = purchases.length > 0 ? new Date(purchases[0].createdAt).toLocaleDateString("es-AR") : "—";
 
     if (sessionLoading) {
@@ -213,20 +285,15 @@ const UserDashboard = () => {
     return (
         <div className={`dm-container ${theme}`}>
 
-            {/* ── TOAST NOTIFICACIÓN ── */}
             {toast && (
-                <div
-                    className="dm-notif-toast"
-                    style={{ borderColor: toast.color, background: toast.bg }}
-                    onClick={() => setToast(null)}
-                >
+                <div className="dm-notif-toast" style={{ borderColor: toast.color, background: toast.bg }} onClick={() => setToast(null)}>
                     <span className="dm-notif-toast-dot" style={{ background: toast.color }} />
                     <span className="dm-notif-toast-msg">{toast.msg}</span>
                     <button className="dm-notif-toast-close">×</button>
                 </div>
             )}
 
-            {/* ── HERO PERFIL ── */}
+            {/* ── HERO ── */}
             <div className="dm-hero">
                 <div className="dm-hero-left">
                     <div className="dm-avatar">
@@ -248,75 +315,40 @@ const UserDashboard = () => {
                     </div>
                 </div>
                 <div className="dm-hero-right">
-                    <div className="dm-hero-badge">
-                        {user.userCertificated ? "ESTUDIANTE CERTIFICADO" : "ESTUDIANTE"}
-                    </div>
+                    <div className="dm-hero-badge">{user.userCertificated ? "ESTUDIANTE CERTIFICADO" : "ESTUDIANTE"}</div>
                     {user.userCertificated && (
-                        <span className="dm-live-badge">
-                            <span className="dm-live-dot" />
-                            EN_VIVO
-                        </span>
+                        <span className="dm-live-badge"><span className="dm-live-dot" />EN_VIVO</span>
                     )}
                 </div>
             </div>
 
-            {/* ── STATS ── */}
-            <div className="dm-stats">
-                <div className="dm-stat">
-                    <span className="dm-stat-label">ÓRDENES</span>
-                    <span className="dm-stat-value">{totalOrdenes}</span>
-                </div>
-                <div className="dm-stat dm-stat-accent">
-                    <span className="dm-stat-label">TOTAL GASTADO</span>
-                    <span className="dm-stat-value">${totalGastado.toLocaleString("es-AR")}</span>
-                </div>
-                <div className="dm-stat">
-                    <span className="dm-stat-label">ÚLTIMA COMPRA</span>
-                    <span className="dm-stat-value dm-stat-small">{ultimaCompra}</span>
-                </div>
-            </div>
+            {/* ── MEMBRESÍA ── */}
+            <MembershipBlock />
 
             {/* ── TABS ── */}
             <div className="dm-tabs">
-                <button className={`dm-tab ${activeTab === "compras" ? "active" : ""}`} onClick={() => handleTabChange("compras")}>
-                    HISTORIAL
-                </button>
-                <button className={`dm-tab ${activeTab === "bolsa" ? "active" : ""}`} onClick={() => handleTabChange("bolsa")}>
-                    BOLSA DE TRABAJO
-                </button>
-                <button className={`dm-tab ${activeTab === "cv" ? "active" : ""}`} onClick={() => handleTabChange("cv")}>
-                    MI CV
-                </button>
+                <button className={`dm-tab ${activeTab === "compras" ? "active" : ""}`} onClick={() => handleTabChange("compras")}>HISTORIAL</button>
+                <button className={`dm-tab ${activeTab === "bolsa"   ? "active" : ""}`} onClick={() => handleTabChange("bolsa")}>BOLSA DE TRABAJO</button>
+                <button className={`dm-tab ${activeTab === "cv"      ? "active" : ""}`} onClick={() => handleTabChange("cv")}>MI CV</button>
                 {user.userCertificated && (
                     <button className={`dm-tab dm-tab--notif ${activeTab === "notif" ? "active" : ""}`} onClick={() => handleTabChange("notif")}>
                         NOTIFICACIONES
-                        {unreadCount > 0 && (
-                            <span className="dm-notif-badge">
-                                {unreadCount >= 100 ? "+99" : unreadCount}
-                            </span>
-                        )}
+                        {unreadCount > 0 && <span className="dm-notif-badge">{unreadCount >= 100 ? "+99" : unreadCount}</span>}
                     </button>
                 )}
-                <button className={`dm-tab ${activeTab === "cuenta" ? "active" : ""}`} onClick={() => handleTabChange("cuenta")}>
-                    MI CUENTA
-                </button>
+                <button className={`dm-tab ${activeTab === "cuenta" ? "active" : ""}`} onClick={() => handleTabChange("cuenta")}>MI CUENTA</button>
             </div>
 
-            {/* ══ TAB: HISTORIAL ══ */}
+            {/* ══ HISTORIAL ══ */}
             {activeTab === "compras" && (
                 <div className="dm-section">
                     {loadingPurchases ? (
-                        <div className="dm-loading">
-                            <span className="dm-loading-dot" /><span className="dm-loading-dot" /><span className="dm-loading-dot" />
-                        </div>
+                        <div className="dm-loading"><span className="dm-loading-dot" /><span className="dm-loading-dot" /><span className="dm-loading-dot" /></div>
                     ) : purchases.length === 0 ? (
-                        <div className="dm-empty-state">
-                            <span className="dm-empty-icon">◫</span>
-                            <p>SIN_COMPRAS_REGISTRADAS</p>
-                        </div>
+                        <div className="dm-empty-state"><span className="dm-empty-icon">◫</span><p>SIN_COMPRAS_REGISTRADAS</p></div>
                     ) : (
                         <div className="dm-purchase-list">
-                            {purchases.map((p) => {
+                            {purchases.map((p: any) => {
                                 const isExpanded = expandedId === p._id;
                                 return (
                                     <div key={p._id} className="dm-purchase-wrapper">
@@ -327,7 +359,7 @@ const UserDashboard = () => {
                                             </div>
                                             <div className="dm-purchase-right">
                                                 <span className={`dm-status ${p.status?.toLowerCase()}`}>{p.status?.toUpperCase()}</span>
-                                                {p.invoiceSent && <span className="dm-invoice-badge" title="Factura enviada">✓ FACTURA RECIBIDA POR EMAIL</span>}
+                                                {p.invoiceSent && <span className="dm-invoice-badge">✓ FACTURA RECIBIDA POR EMAIL</span>}
                                                 <span className="dm-purchase-amount">${(p.calculo?.totalFinal ?? p.amount)?.toLocaleString("es-AR")}</span>
                                                 <span className="dm-chevron">{isExpanded ? "▲" : "▼"}</span>
                                             </div>
@@ -352,15 +384,13 @@ const UserDashboard = () => {
                                                 {p.items && p.items.length > 0 && (
                                                     <div className="dm-detail-block">
                                                         <span className="dm-detail-title">PRODUCTOS</span>
-                                                        {p.items.map((item, i) => (
+                                                        {p.items.map((item: any, i: number) => (
                                                             <div key={i} className="dm-item-row">
                                                                 <div className="dm-item-info">
                                                                     <strong>{item.nombre}</strong>
                                                                     {item.varianteLabel && <em className="dm-variante">{item.varianteLabel}</em>}
                                                                 </div>
-                                                                <div className="dm-item-right">
-                                                                    <span className="dm-item-price">${item.totalItem?.toLocaleString("es-AR")}</span>
-                                                                </div>
+                                                                <span className="dm-item-price">${item.totalItem?.toLocaleString("es-AR")}</span>
                                                             </div>
                                                         ))}
                                                     </div>
@@ -375,38 +405,24 @@ const UserDashboard = () => {
                 </div>
             )}
 
-            {/* ══ TAB: BOLSA DE TRABAJO ══ */}
             {activeTab === "bolsa" && <JobBoard />}
+            {activeTab === "cv"    && <div className="dm-section"><CvBuilder /></div>}
 
-            {/* ══ TAB: MI CV ══ */}
-            {activeTab === "cv" && (
-                <div className="dm-section">
-                    <CvBuilder />
-                </div>
-            )}
-
-            {/* ══ TAB: NOTIFICACIONES ══ */}
+            {/* ══ NOTIFICACIONES ══ */}
             {activeTab === "notif" && (
                 <div className="dm-section">
                     {notifications.length === 0 ? (
                         <div className="dm-empty-state">
                             <span className="dm-empty-icon">◫</span>
                             <p>SIN_NOTIFICACIONES</p>
-                            <p style={{ fontSize: "0.75rem", opacity: 0.4, marginTop: 8 }}>
-                                Cuando una empresa actualice tu postulación, aparecerá acá.
-                            </p>
+                            <p style={{ fontSize: "0.75rem", opacity: 0.4, marginTop: 8 }}>Cuando una empresa actualice tu postulación, aparecerá acá.</p>
                         </div>
                     ) : (
                         <div className="dm-notif-list">
                             {notifications.map((n) => {
                                 const statusInfo = APP_STATUS[n.status] ?? APP_STATUS.pending;
                                 return (
-                                    <div
-                                        key={n.id}
-                                        className={`dm-notif-item${n.read ? "" : " dm-notif-item--unread"}`}
-                                        style={{ borderLeftColor: statusInfo.color }}
-                                    >
-                                        {/* Empresa */}
+                                    <div key={n.id} className={`dm-notif-item${n.read ? "" : " dm-notif-item--unread"}`} style={{ borderLeftColor: statusInfo.color }}>
                                         <div className="dm-notif-company">
                                             {n.companyLogo
                                                 ? <img src={n.companyLogo} alt={n.companyName ?? "empresa"} className="dm-notif-logo" />
@@ -414,19 +430,11 @@ const UserDashboard = () => {
                                             }
                                             <span className="dm-notif-company-name">{n.companyName ?? "Empresa"}</span>
                                         </div>
-
-                                        {/* Vacante */}
                                         <p className="dm-notif-vacancy">{n.vacancyTitle}</p>
-
-                                        {/* Estado */}
                                         <div className="dm-notif-status" style={{ background: statusInfo.bg, borderColor: statusInfo.color }}>
                                             <span className="dm-notif-status-dot" style={{ background: statusInfo.color }} />
-                                            <span className="dm-notif-status-label" style={{ color: statusInfo.color }}>
-                                                {statusInfo.label}
-                                            </span>
+                                            <span className="dm-notif-status-label" style={{ color: statusInfo.color }}>{statusInfo.label}</span>
                                         </div>
-
-                                        {/* Fecha */}
                                         <p className="dm-notif-date">
                                             {new Date(n.createdAt).toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" })}
                                             {" · "}
@@ -440,7 +448,7 @@ const UserDashboard = () => {
                 </div>
             )}
 
-            {/* ══ TAB: MI CUENTA ══ */}
+            {/* ══ MI CUENTA ══ */}
             {activeTab === "cuenta" && (
                 <div className="dm-section">
                     <div className="dm-account-grid">
@@ -458,8 +466,12 @@ const UserDashboard = () => {
                                 {user.userCertificated ? "✓ ESTUDIANTE CERTIFICADO" : "PENDIENTE"}
                             </span>
                         </div>
+                        <div className="dm-account-card">
+                            <span className="dm-account-card-label">ÚLTIMA COMPRA</span>
+                            <span className="dm-account-card-value dm-account-card-value--small">{ultimaCompra}</span>
+                        </div>
                     </div>
-                    {purchases.some(p => p.status === "approved" && !p.invoiceSent) && (
+                    {purchases.some((p: any) => p.status === "approved" && !p.invoiceSent) && (
                         <div className="dm-notice">
                             <span className="dm-notice-dot" />
                             Tenés órdenes aprobadas con factura pendiente de envío.

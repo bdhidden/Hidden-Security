@@ -22,11 +22,7 @@ export interface MembershipState {
 
 // ─── Helper: calcular acceso de un plan ──────────────────────────────────────
 
-function calcPlanAccess(
-    planId:        string,
-    purchases:     string[],
-    expiry:        Record<string, string>
-): PlanAccessResult {
+function calcPlanAccess(planId: string,purchases: string[],expiry: Record<string, string>): PlanAccessResult {
     const hasPlan = purchases.includes(planId);
 
     if (!hasPlan) {
@@ -132,10 +128,31 @@ export const formatDaysLeft = (daysLeft: number | null): string => {
     if (daysLeft === 0)    return "VENCIDO";
     if (daysLeft === 1)    return "1 DÍA RESTANTE";
     if (daysLeft <= 7)     return `${daysLeft} DÍAS RESTANTES`;
-    if (daysLeft <= 30) {
-        const weeks = Math.floor(daysLeft / 7);
-        return `${weeks} SEMANA${weeks > 1 ? "S" : ""} RESTANTE${weeks > 1 ? "S" : ""}`;
-    }
-    const months = Math.floor(daysLeft / 30);
+    if (daysLeft < 30)     return `${daysLeft} DÍAS RESTANTES`;
+    const months = Math.round(daysLeft / 30.44); // promedio real de días por mes
     return `${months} MES${months > 1 ? "ES" : ""} RESTANTE${months > 1 ? "S" : ""}`;
+};
+
+// Helper para el desglose detallado (expiresAt → "X meses y Y días")
+export const formatDesglose = (expiresAt: Date | null): string => {
+    if (!expiresAt) return "";
+    const now   = new Date();
+    let   years  = expiresAt.getFullYear() - now.getFullYear();
+    let   months = expiresAt.getMonth()    - now.getMonth();
+    let   days   = expiresAt.getDate()     - now.getDate();
+
+    if (days < 0) {
+        months--;
+        // días del mes anterior
+        const prevMonth = new Date(expiresAt.getFullYear(), expiresAt.getMonth(), 0);
+        days += prevMonth.getDate();
+    }
+    if (months < 0) { years--; months += 12; }
+
+    const totalMonths = years * 12 + months;
+
+    if (totalMonths === 0 && days === 0) return "Hoy vence";
+    if (totalMonths === 0) return `${days} día${days !== 1 ? "s" : ""}`;
+    if (days === 0) return `${totalMonths} mes${totalMonths !== 1 ? "es" : ""}`;
+    return `${totalMonths} mes${totalMonths !== 1 ? "es" : ""} y ${days} día${days !== 1 ? "s" : ""}`;
 };

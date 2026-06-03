@@ -4,7 +4,7 @@ import "./userDashboard.css";
 import { UseSession }   from "../contexts/SessionContext";
 import { UseTheme }     from "../contexts/ThemeContext";
 import { UseShopping }  from "../contexts/ShoppingContext";
-import { useMembership, formatDaysLeft } from "../contexts/UsePlanAccess";
+import { useMembership, formatDaysLeft, formatDesglose } from "../contexts/UsePlanAccess";
 import JobBoard  from "./JobBoard";
 import CvBuilder from "./CvBuilder";
 
@@ -119,10 +119,7 @@ const MembershipBlock = () => {
                         <span className="dm-membership-time-value">{formatDaysLeft(daysLeft)}</span>
                         {daysLeft > 0 && (
                             <span className="dm-membership-time-detail">
-                                {daysLeft >= 30
-                                    ? `${Math.floor(daysLeft / 30)} mes${Math.floor(daysLeft / 30) > 1 ? "es" : ""} y ${daysLeft % 30} día${daysLeft % 30 !== 1 ? "s" : ""}`
-                                    : `${daysLeft} día${daysLeft !== 1 ? "s" : ""}`
-                                }
+                                {formatDesglose(expiresAt)}  
                             </span>
                         )}
                     </div>

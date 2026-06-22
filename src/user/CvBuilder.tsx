@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { UseSession } from "../contexts/SessionContext";
+/* import { UseSession } from "../contexts/SessionContext"; */
 import { UseTheme } from "../contexts/ThemeContext";
 import "./cvBuilder.css";
 
@@ -391,7 +391,7 @@ function CVPreview({ cv }: { cv: CVData }) {
 
 // ─── CVBuilder principal ──────────────────────────────────────────────────────
 export default function CVBuilder() {
-  const { user }  = UseSession();
+  /* const { user }  = UseSession(); */
   const { theme } = UseTheme();
   const isLight   = theme === "light";
 

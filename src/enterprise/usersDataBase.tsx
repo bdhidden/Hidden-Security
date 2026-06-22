@@ -337,7 +337,7 @@ function CandidateDetail({ candidate, onDownload }: { candidate: CandidateCV; on
       {candidate.skillsCertifiedByHidden.some(s => !candidate.skills.includes(s)) && (
         <div className="udb-detail-section">
           <span className="udb-detail-section-title udb-detail-section-title--gold">
-            // CERTIFICACIONES ADICIONALES (no declaradas por el candidato)
+            // CERTIFICACIONES ADICIONALES OBTENIDAS (no declaradas por el candidato en el CV)
           </span>
           <div className="udb-skills-row">
             {candidate.skillsCertifiedByHidden

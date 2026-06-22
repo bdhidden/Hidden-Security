@@ -542,7 +542,7 @@ export default function VacancyManager() {
   const [showModal,      setShowModal]      = useState(false);
   const [editingVacancy, setEditingVacancy] = useState<Vacancy | null>(null);
   const [filterStatus,   setFilterStatus]   = useState<Status | "all">("all");
-  const [toast,          setToast]          = useState<ToastState | null>(null);
+  const [,          setToast]          = useState<ToastState | null>(null);
 
   // ── Plan B2B activo ────────────────────────────────────────────
   const [b2bPlan,          setB2bPlan]          = useState<string | null>(null);   // "b2b_seis" | "b2b_doce" | null

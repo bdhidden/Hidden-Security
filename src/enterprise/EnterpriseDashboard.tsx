@@ -646,13 +646,13 @@ function PostuladosTab() {
 // ─── EnterpriseDashboard ──────────────────────────────────────────────────────
 const EnterpriseDashboard = () => {
   const { user }                         = UseSession();
-  const { allTickets, getAllTickets }     = UseShopping();
+  const { getAllTickets }     = UseShopping();
   const { theme }                        = UseTheme();
 
   const [activeTab,       setActiveTab]       = useState("vacancy");
   const [toast,           setToast]           = useState<{ msg: string; color: string; bg: string } | null>(null);
   const [applicantCount,  setApplicantCount]  = useState(0);
-  const [newApplicants,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
+  const [,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
 
   // ── Plan B2B info ─────────────────────────────────────────────
   const [planInfo, setPlanInfo] = useState<{

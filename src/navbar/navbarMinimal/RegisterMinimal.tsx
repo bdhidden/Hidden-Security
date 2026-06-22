@@ -180,13 +180,6 @@ const RegisterMinimal = ({ openLogin, closeRegister }: any) => {
                             </button>
                         </form>
                     </main>
-
-                   {/*  <footer className="k-reg-footer">
-                        <button className="k-reg-switch" onClick={openLogin}>
-                            <span className="switch-label">{texts[language].register.footerLink}</span>
-                            <div className="switch-line"></div>
-                        </button>
-                    </footer> */}
                 </div>
             </div>
         </div>

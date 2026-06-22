@@ -9,7 +9,7 @@ import axios from "axios";
 import "./checkout.css";
 import Error from "../processMessages/Error";
 import Loader from "../loader/Loader";
-import useMercadoPago from "../hooks/useMercadoPago";
+/* import useMercadoPago from "../hooks/useMercadoPago"; */
 import CreditCard from "../ui/creditCard/CreditCard";
 import ProcessOk from "../processMessages/ProcessOk";
 
@@ -151,11 +151,10 @@ function PurchaseBlockedBanner({ title, detail }: { title: string; detail: strin
     );
 }
 
-// ─── Checkout ──────────────────────────────────────────────────────────────────
 const Checkout = () => {
     const { planId } = useParams();
-    const navigate   = useNavigate();
-    const mp         = useMercadoPago();
+    /* const navigate   = useNavigate();
+    const mp         = useMercadoPago(); */
     const [idempotencyKey] = useState(v4());
     const { theme }  = UseTheme();
     const { user }   = UseSession();
@@ -213,8 +212,9 @@ const Checkout = () => {
         if (!appliedCoupon) return totalConInteres;
         if (appliedCoupon.scope === 'all') return totalConInteres * (1 - appliedCoupon.discount / 100);
         let discountableBase = 0;
-        if (appliedCoupon.allowedPlans.includes(selectedPlan!.id)) discountableBase += selectedPlan!.price;
-        if (voucherAdded && appliedCoupon.allowedPlans.includes('voucher')) discountableBase += VOUCHER_PLAN.price;
+        const allowedPlans = appliedCoupon.allowedPlans ?? [];
+        if (allowedPlans.includes(selectedPlan!.id)) discountableBase += selectedPlan!.price;
+        if (voucherAdded && allowedPlans.includes('voucher')) discountableBase += VOUCHER_PLAN.price;
         return totalConInteres - (discountableBase * (appliedCoupon.discount / 100));
     }, [totalConInteres, appliedCoupon, selectedPlan, voucherAdded]);
 

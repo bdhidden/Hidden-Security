@@ -36,9 +36,9 @@ const NOTES = [
 ];
 
 const AdminDashboard = () => {
-  const { user, handleUnbanUser, handleBanUser } = UseSession();
+  const { user/* , handleUnbanUser, handleBanUser */ } = UseSession();
   const { allTickets, getAllTickets }             = UseShopping();
-  const { users, getUsers }                      = UseUsers();
+  const { /* users, */ getUsers }                      = UseUsers();
   const { theme }                                = UseTheme();
 
   const [activeTab, setActiveTab] = useState("charts");
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
   const showToastRef    = useRef<(msg: string) => void>(() => {});
   useEffect(() => { getAllTicketsRef.current = getAllTickets; });
 
-  const uncheckedCount = allTickets.filter(t => !t.checked).length;
+  const uncheckedCount = allTickets.filter((t: any) => !t.checked).length;
 
   const playSound = useCallback(() => {
     try {
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
       <main className="hs-content">
         {activeTab === "charts"  && <Charts allTickets={allTickets} />}
         {activeTab === "sales"   && <SalesHistory allTickets={allTickets} />}
-        {activeTab === "users"   && <UserList users={users} handleBanUser={handleBanUser} handleUnbanUser={handleUnbanUser} />}
+        {activeTab === "users"   && <UserList /* users={users} handleBanUser={handleBanUser} handleUnbanUser={handleUnbanUser} */ />}
         {activeTab === "coupons" && <CouponCreator />}
       </main>
 

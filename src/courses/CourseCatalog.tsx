@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import Soc1Course from "../courses/paidCourses/soc1/Soc1Course";
 import "./courseCatalog.css";
 

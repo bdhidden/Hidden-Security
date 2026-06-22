@@ -607,7 +607,7 @@ function CourseSidebar({
 }
 
 // ── Viewer de Video ───────────────────────────────────────────────────────────
-function VideoViewer({ src, title }: { src: string; title: string }) {
+function VideoViewer({ src/* , title */}: { src: string; /* title: string */ }) {
   return (
     <div className="sc-video-wrap">
       <video
@@ -715,9 +715,7 @@ function PdfViewer({ src }: { src: string }) {
 }
 
 // ── Quiz ──────────────────────────────────────────────────────────────────────
-function QuizViewer({
-  questions, stepIndex, existingResult, onSubmit,
-}: {
+function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
   questions:      QuizQuestion[];
   stepIndex:      number;
   existingResult: QuizResult | null;
@@ -968,7 +966,7 @@ export default function Soc1Course() {
   };
 
   // ── Guardar resultado del quiz ────────────────────────────────────────────
-  const handleQuizSubmit = async (score: number, passed: boolean) => {
+  const handleQuizSubmit = async (score: number, /* passed: boolean */) => {
     if (!progress) return;
     try {
       const { data } = await axios.patch(
@@ -1154,7 +1152,7 @@ export default function Soc1Course() {
 
           {/* Video */}
           {step?.type === "video" && step.src && (
-            <VideoViewer src={step.src} title={step.title} />
+            <VideoViewer src={step.src} /* title={step.title} */ />
           )}
 
           {/* PDF */}

@@ -18,7 +18,7 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: false, 
   },
-  /* esbuild: {
+  esbuild: {
     drop: ['console', 'debugger'],
-  }, */
+  },
 })

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Document, Page, pdfjs } from "react-pdf";
-import videoCurso from "./video-curso.mp4";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import "./soc1Course.css";
@@ -52,12 +51,12 @@ const COURSE_STEPS: CourseStep[] = [
     type:        "video",
     title:       "Módulo 1 — ¿Qué es un SOC?",
     description: "Estructura y funciones de un Centro de Operaciones de Seguridad.",
-    src: videoCurso
+    src:         "/videos/soc1/modulo1_que_es_soc.mp4",
   },
   {
     type:    "pdf",
     title:   "Material de lectura — Fundamentos SOC",
-    pdfSrc: "/public/pdf/prueba.pdf",
+    pdfSrc:  "/pdfs/soc1/modulo1_fundamentos.pdf",
     pages:   12,
   },
   {
@@ -172,12 +171,12 @@ const COURSE_STEPS: CourseStep[] = [
     type:        "video",
     title:       "Módulo 2 — Tipos de amenazas",
     description: "Malware, phishing, ransomware y vectores de ataque comunes.",
-    src: videoCurso
+    src:         "/videos/soc1/modulo2_amenazas.mp4",
   },
   {
     type:    "pdf",
     title:   "Material de lectura — Vectores de ataque",
-    pdfSrc: "/public/pdf/prueba.pdf",
+    pdfSrc:  "/pdfs/soc1/modulo2_vectores.pdf",
     pages:   18,
   },
   {
@@ -292,12 +291,12 @@ const COURSE_STEPS: CourseStep[] = [
     type:        "video",
     title:       "Módulo 3 — Herramientas del analista",
     description: "SIEM, IDS/IPS, threat intelligence y plataformas de respuesta.",
-    src: videoCurso
+    src:         "/videos/soc1/modulo3_herramientas.mp4",
   },
   {
     type:    "pdf",
     title:   "Material de lectura — Splunk y análisis de logs",
-    pdfSrc: "/public/pdf/prueba.pdf",
+    pdfSrc:  "/pdfs/soc1/modulo3_splunk.pdf",
     pages:   22,
   },
   {
@@ -412,12 +411,12 @@ const COURSE_STEPS: CourseStep[] = [
     type:        "video",
     title:       "Módulo 4 — Respuesta a incidentes",
     description: "Metodología de triage, contención, erradicación y recuperación.",
-    src: videoCurso
+    src:         "/videos/soc1/modulo4_respuesta.mp4",
   },
   {
     type:    "pdf",
     title:   "Material de lectura — Playbooks de respuesta",
-    pdfSrc: "/public/pdf/prueba.pdf",
+    pdfSrc:  "/pdfs/soc1/modulo4_playbooks.pdf",
     pages:   16,
   },
   {
@@ -607,7 +606,7 @@ function CourseSidebar({
 }
 
 // ── Viewer de Video ───────────────────────────────────────────────────────────
-function VideoViewer({ src/* , title */}: { src: string; /* title: string */ }) {
+function VideoViewer({ src }: { src: string; }) {
   return (
     <div className="sc-video-wrap">
       <video
@@ -715,19 +714,21 @@ function PdfViewer({ src }: { src: string }) {
 }
 
 // ── Quiz ──────────────────────────────────────────────────────────────────────
-function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
+function QuizViewer({
+  questions, stepIndex, existingResult, onSubmit,
+}: {
   questions:      QuizQuestion[];
   stepIndex:      number;
   existingResult: QuizResult | null;
-  onSubmit:       (score: number, passed: boolean) => Promise<void>;
+  onSubmit:       (answers: number[]) => Promise<{ score: number; passed: boolean; correct: number }>;
 }) {
   const [answers,    setAnswers]    = useState<Record<number, number>>({});
   const [submitted,  setSubmitted]  = useState(false);
   const [score,      setScore]      = useState<number | null>(null);
+  const [passed,     setPassed]     = useState(false);
   const [attempts,   setAttempts]   = useState(existingResult?.attempts ?? 0);
   const [saving,     setSaving]     = useState(false);
 
-  // Si ya tiene resultado previo aprobado, mostrar resultado
   const [showPrior,  setShowPrior]  = useState(!!existingResult?.passed);
 
   const handleSelect = (qIdx: number, aIdx: number) => {
@@ -737,17 +738,16 @@ function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
 
   const handleSubmit = async () => {
     if (Object.keys(answers).length < questions.length) return;
+    setSaving(true);
 
-    let correct = 0;
-    questions.forEach((q, i) => { if (answers[i] === q.answer) correct++; });
-    const sc     = correct / questions.length;
-    const passed = sc >= PASSING_SCORE;
+    // Construir array de respuestas — el backend calcula el score
+    const answersArray = questions.map((_, i) => answers[i] ?? -1);
+    const result = await onSubmit(answersArray);
 
-    setScore(sc);
+    setScore(result.score);
+    setPassed(result.passed);
     setSubmitted(true);
     setAttempts(prev => prev + 1);
-    setSaving(true);
-    await onSubmit(sc, passed);
     setSaving(false);
   };
 
@@ -755,6 +755,7 @@ function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
     setAnswers({});
     setSubmitted(false);
     setScore(null);
+    setPassed(false);
     setShowPrior(false);
   };
 
@@ -776,7 +777,6 @@ function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
   }
 
   if (submitted && score !== null) {
-    const passed = score >= PASSING_SCORE;
     return (
       <div className={`sc-quiz-result${passed ? " sc-quiz-result--passed" : " sc-quiz-result--failed"}`}>
         <span className="sc-quiz-result-icon">{passed ? "✓" : "✗"}</span>
@@ -790,17 +790,15 @@ function QuizViewer({ questions, /* stepIndex, */ existingResult, onSubmit,}: {
           }
         </p>
         <p className="sc-quiz-attempts">Intento #{attempts}</p>
-        {/* Revisión de respuestas */}
+        {/* Revisión de respuestas — muestra opciones pero no la correcta (está en el backend) */}
         <div className="sc-quiz-review">
           {questions.map((q, i) => {
-            const userAns    = answers[i];
-            const isCorrect  = userAns === q.answer;
+            const userAns = answers[i];
             return (
-              <div key={i} className={`sc-quiz-review-item${isCorrect ? " correct" : " wrong"}`}>
+              <div key={i} className="sc-quiz-review-item">
                 <p className="sc-quiz-review-q">{i + 1}. {q.question}</p>
                 <p className="sc-quiz-review-a">
                   Tu respuesta: <strong>{q.options[userAns] ?? "—"}</strong>
-                  {!isCorrect && <span className="sc-quiz-review-correct"> · Correcta: {q.options[q.answer]}</span>}
                 </p>
               </div>
             );
@@ -952,7 +950,7 @@ export default function Soc1Course() {
     try {
       const { data } = await axios.patch(
         `${import.meta.env.VITE_API_URL}/api/course/${COURSE_ID}/progress/step`,
-        { stepIndex: activeStep, totalSteps: TOTAL_STEPS },
+        { stepIndex: activeStep },
         { withCredentials: true }
       );
       setProgress(data.data);
@@ -966,21 +964,19 @@ export default function Soc1Course() {
   };
 
   // ── Guardar resultado del quiz ────────────────────────────────────────────
-  const handleQuizSubmit = async (score: number, /* passed: boolean */) => {
-    if (!progress) return;
+  const handleQuizSubmit = async (answers: number[]): Promise<{ score: number; passed: boolean; correct: number }> => {
+    if (!progress) return { score: 0, passed: false, correct: 0 };
     try {
       const { data } = await axios.patch(
         `${import.meta.env.VITE_API_URL}/api/course/${COURSE_ID}/progress/quiz`,
-        {
-          stepIndex: activeStep,
-          score,
-          attempts: (progress.quizResults?.[String(activeStep)]?.attempts ?? 0) + 1,
-        },
+        { stepIndex: activeStep, answers },
         { withCredentials: true }
       );
       setProgress(data.data);
+      return { score: data.score, passed: data.passed, correct: data.correct };
     } catch (err) {
       console.error("Error guardando quiz:", err);
+      return { score: 0, passed: false, correct: 0 };
     }
   };
 
@@ -1152,7 +1148,7 @@ export default function Soc1Course() {
 
           {/* Video */}
           {step?.type === "video" && step.src && (
-            <VideoViewer src={step.src} /* title={step.title} */ />
+            <VideoViewer src={step.src} />
           )}
 
           {/* PDF */}

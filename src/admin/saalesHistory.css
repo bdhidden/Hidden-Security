@@ -143,13 +143,13 @@
 
 .sh-date {
     color:       var(--sh-accent);
-    font-size:   16px;
+    font-size:   12px;
     font-weight: 800;
     white-space: nowrap;
 }
 
 .sh-user {
-    font-size:   16px;
+    font-size:   12px;
     font-weight: 700;
     text-transform: uppercase;
     font-family: 'Montserrat', sans-serif;
@@ -164,7 +164,7 @@
 
 /* ── STATUS BADGES ───────────────────────────────────────────── */
 .sh-status {
-    font-size:      16px;
+    font-size:      12px;
     font-weight:    800;
     padding:        3px 8px;
     letter-spacing: 1.5px;
@@ -180,7 +180,7 @@
 .sh-status.paid     { color: var(--sh-green);   border-color: rgba(34,197,94,0.3); }
 
 .sh-plan {
-    font-size:      1rem;
+    font-size:      0.8rem;
     font-weight:    800;
     color:          var(--sh-text-dim);
     text-transform: uppercase;
@@ -190,7 +190,7 @@
 .sh-amount {
     font-family:    'Montserrat', sans-serif;
     font-weight:    900;
-    font-size:      1rem;
+    font-size:      0.8rem;
     color:          var(--sh-accent);
     white-space:    nowrap;
 }
@@ -202,7 +202,7 @@
     border:         1px solid var(--sh-border-s);
     color:          var(--sh-text-dim);
     font-family:    'JetBrains Mono', monospace;
-    font-size:      1rem;
+    font-size:      0.8rem;
     font-weight:    800;
     letter-spacing: 1.5px;
     padding:        5px 12px;

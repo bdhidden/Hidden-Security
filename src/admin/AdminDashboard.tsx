@@ -41,8 +41,15 @@ const AdminDashboard = () => {
   const { /* users, */ getUsers }                      = UseUsers();
   const { theme }                                = UseTheme();
 
-  const [activeTab, setActiveTab] = useState("charts");
-  const [toast, setToast]         = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return localStorage.getItem("hs_admin_tab") ?? "charts";
+  });
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    localStorage.setItem("hs_admin_tab", tabId);
+  };
 
   const audioCtxRef   = useRef<AudioContext | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -162,7 +169,7 @@ const AdminDashboard = () => {
             <button
               key={tab.id}
               className={`hs-tab-btn ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
             >
               <span className="hs-tab-icon">{tab.icon}</span>
               <span className="hs-tab-label">{tab.label}</span>

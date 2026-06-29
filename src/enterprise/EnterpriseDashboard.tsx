@@ -5,7 +5,6 @@ import { UseSession } from "../contexts/SessionContext";
 import { UseShopping } from "../contexts/ShoppingContext";
 import { UseTheme } from "../contexts/ThemeContext";
 import VacancyManager from "./VacancyManager";
-import UsersDatabase from "./usersDataBase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface ApplicantEvent {
@@ -646,13 +645,15 @@ function PostuladosTab() {
 // ─── EnterpriseDashboard ──────────────────────────────────────────────────────
 const EnterpriseDashboard = () => {
   const { user }                         = UseSession();
-  const { getAllTickets }     = UseShopping();
+  const { allTickets, getAllTickets }     = UseShopping();
   const { theme }                        = UseTheme();
 
-  const [activeTab,       setActiveTab]       = useState("vacancy");
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return localStorage.getItem("hs_enterprise_tab") ?? "vacancy";
+  });
   const [toast,           setToast]           = useState<{ msg: string; color: string; bg: string } | null>(null);
   const [applicantCount,  setApplicantCount]  = useState(0);
-  const [,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
+  const [newApplicants,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
 
   // ── Plan B2B info ─────────────────────────────────────────────
   const [planInfo, setPlanInfo] = useState<{
@@ -691,7 +692,7 @@ const EnterpriseDashboard = () => {
   useEffect(() => { getAllTicketsRef.current = getAllTickets; });
   useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
 
-  /* const uncheckedCount = allTickets.filter((t) => !t.checked).length; */
+  const uncheckedCount = allTickets.filter((t) => !t.checked).length;
 
   // Inicializar AudioContext en el primer click — requerido por los browsers
   useEffect(() => {
@@ -809,9 +810,10 @@ const EnterpriseDashboard = () => {
     return () => { sseApplicantsRef.current?.close(); sseApplicantsRef.current = null; };
   }, [user, playSound]); // eslint-disable-line
 
-  // Limpiar badge al entrar al tab de postulados
+  // Limpiar badge al entrar al tab de postulados y persistir en localStorage
   const handleTabChange = (id: string) => {
     setActiveTab(id);
+    localStorage.setItem("hs_enterprise_tab", id);
     if (id === "postulados") setApplicantCount(0);
   };
 
@@ -832,11 +834,6 @@ const EnterpriseDashboard = () => {
     },
     {
       id: "postulados", label: "POSTULADOS",
-      icon: (<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="6" r="3"/><path d="M2 17c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 9l1.5 1.5L18 8"/></svg>),
-      badge: applicantCount,
-    },
-    {
-      id: "usuariosDb", label: "USUARIOS_DB",
       icon: (<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="6" r="3"/><path d="M2 17c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 9l1.5 1.5L18 8"/></svg>),
       badge: applicantCount,
     },
@@ -919,7 +916,6 @@ const EnterpriseDashboard = () => {
       <main className="hs-content">
         {activeTab === "vacancy"    && <VacancyManager />}
         {activeTab === "postulados" && <PostuladosTab />}
-        {activeTab === "usuariosDb" && <UsersDatabase />}
       </main>
 
     </div>

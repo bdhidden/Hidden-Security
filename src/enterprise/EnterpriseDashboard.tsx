@@ -645,7 +645,7 @@ function PostuladosTab() {
 // ─── EnterpriseDashboard ──────────────────────────────────────────────────────
 const EnterpriseDashboard = () => {
   const { user }                         = UseSession();
-  const { allTickets, getAllTickets }     = UseShopping();
+  const { getAllTickets }     = UseShopping();
   const { theme }                        = UseTheme();
 
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -653,7 +653,7 @@ const EnterpriseDashboard = () => {
   });
   const [toast,           setToast]           = useState<{ msg: string; color: string; bg: string } | null>(null);
   const [applicantCount,  setApplicantCount]  = useState(0);
-  const [newApplicants,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
+  const [,   setNewApplicants]   = useState<ApplicantEvent[]>([]);
 
   // ── Plan B2B info ─────────────────────────────────────────────
   const [planInfo, setPlanInfo] = useState<{
@@ -692,7 +692,7 @@ const EnterpriseDashboard = () => {
   useEffect(() => { getAllTicketsRef.current = getAllTickets; });
   useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
 
-  const uncheckedCount = allTickets.filter((t) => !t.checked).length;
+  /* const uncheckedCount = allTickets.filter((t) => !t.checked).length; */
 
   // Inicializar AudioContext en el primer click — requerido por los browsers
   useEffect(() => {

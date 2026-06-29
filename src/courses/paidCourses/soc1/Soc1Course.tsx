@@ -714,9 +714,7 @@ function PdfViewer({ src }: { src: string }) {
 }
 
 // ── Quiz ──────────────────────────────────────────────────────────────────────
-function QuizViewer({
-  questions, stepIndex, existingResult, onSubmit,
-}: {
+function QuizViewer({ questions, existingResult, onSubmit }: {
   questions:      QuizQuestion[];
   stepIndex:      number;
   existingResult: QuizResult | null;

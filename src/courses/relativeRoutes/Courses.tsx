@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import video1 from "../../assets/video-curso.mp4";
 import './courses.css';
 import { UseTheme } from '../../contexts/ThemeContext';
 import LiveTypingText from '../../ui/LiveTypingText';
@@ -58,7 +57,7 @@ const Courses: React.FC = () => {
 
                     <div className="h-hero-video">
                         <video controls className="h-video-player">
-                            <source src={`${video1}#t=0.001`} type="video/mp4" />
+                            <source src="https://res.cloudinary.com/dfpomipab/video/upload/v1782857862/video-curso_jqxafe.mp4#t=0.001" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                         <div className="h-video-decorator" />

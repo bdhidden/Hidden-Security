@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import "./companyInfoMinimal.css";
-import videoMinimal from "../assets/minimal-company.mp4";
 import HighPerformanceSection from './HighPerformanceSection';
 import { MetricGrid } from './MetricGrid';
 import LiveTypingText from '../ui/LiveTypingText';
@@ -34,7 +33,7 @@ const CompanyInfo: React.FC = () => {
             <section className="k-hero">
                 <motion.div className="k-video-wrapper">
                     <video autoPlay muted loop playsInline className="k-video">
-                        <source src={videoMinimal} type="video/mp4" />
+                        <source src="https://res.cloudinary.com/dfpomipab/video/upload/v1782857864/minimal-company_knrkl8.mp4" type="video/mp4" />
                     </video>
                     <div className="k-video-mask" />
                 </motion.div>

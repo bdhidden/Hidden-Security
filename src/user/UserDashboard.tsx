@@ -257,8 +257,8 @@ const UserDashboard = () => {
                         {cvProfile?.photo
                             ? <img src={cvProfile.photo} alt="Foto de perfil" className="dm-avatar-photo" />
                             : (cvProfile?.firstName || cvProfile?.lastName)
-                                ? (cvProfile.firstName.charAt(0) + (cvProfile.lastName.charAt(0) ?? "")).toUpperCase()
-                                : (user.nombre?.charAt(0).toUpperCase() ?? user.email.charAt(0).toUpperCase())
+                                ? ((cvProfile.firstName?.charAt(0) ?? "") + (cvProfile.lastName?.charAt(0) ?? "")).toUpperCase()
+                                : (user.nombre?.charAt(0)?.toUpperCase() ?? user.email?.charAt(0)?.toUpperCase() ?? "U")
                         }
                     </div>
                     <div className="dm-hero-info">

@@ -265,7 +265,7 @@ const UserDashboard = () => {
                         <h1 className="dm-hero-name">
                             {(cvProfile?.firstName || cvProfile?.lastName)
                                 ? `${cvProfile.firstName} ${cvProfile.lastName}`.trim()
-                                : (user.nombre || user.email.split("@")[0])
+                                : (user.nombre || user.email?.split("@")[0] || "Usuario")
                             }
                         </h1>
                         <p className="dm-hero-email">{user.email}</p>

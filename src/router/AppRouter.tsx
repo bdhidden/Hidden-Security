@@ -41,11 +41,10 @@ const AppRouter = () => {
                                 <Route path="/error" element={<Error processMessage="" />} />
                                 <Route path="/ok" element={<ProcessOk processMessage="Compra Exitosa!" />} />
                                 <Route path="/policy-cookie" element={<PoliticaCookies />} />
-                                <Route path="/*" element={<Error404Minimal />} />
                                 <Route path="/dashboard" element={<PrivateRoute adminOnly={false}><UserDashboard /></PrivateRoute>} />
-                                Tiene Acceso solo el admin con la prop pasada
                                 <Route path="/admin" element={<PrivateRoute adminOnly={true}><AdminDashboard /></PrivateRoute>} />
                                 <Route path="/enterprise" element={<PrivateRoute enterpriseOnly={true}><EnterpriseDashboard /></PrivateRoute>} /> 
+                                <Route path="/*" element={<Error404Minimal />} />
                             </Routes>
                             <FooterMinimal />
                 </CartProvider> 

@@ -309,3 +309,200 @@
         min-height: auto;
     }
 }
+
+/* ==========================================================================
+   SECCIÓN: Y MUCHO MÁS
+   Agregar al final de cursoParam.css
+   ========================================================================== */
+
+.h-more-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 5%;
+}
+
+/* ── Eyebrow ── */
+.h-more-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 64px;
+}
+
+.h-more-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--h-border);
+}
+
+/* ── Layout dos columnas ── */
+.h-more-body {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+}
+
+/* ── Columna izquierda ── */
+.h-more-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: var(--h-text);
+    margin: 0 0 36px 0;
+}
+
+.h-more-title-accent {
+    color: var(--h-accent);
+    display: block;
+}
+
+.h-tactic-root.light .h-more-title {
+    color: #000;
+}
+
+.h-more-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 16px;
+    max-width: 480px;
+}
+
+.h-tactic-root.light .h-more-desc {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.h-more-subdesc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--h-accent);
+    margin-top: 32px;
+    text-transform: uppercase;
+}
+
+/* ── Columna derecha: grid de tags ── */
+.h-more-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.h-topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.h-topic-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 8px 14px;
+    border: 1px solid var(--h-border);
+    color: rgba(255, 255, 255, 0.75);
+    background: transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+    cursor: default;
+}
+
+.h-topic-tag:hover {
+    border-color: var(--h-accent);
+    color: var(--h-accent);
+}
+
+.h-tactic-root.light .h-topic-tag {
+    color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+.h-tactic-root.light .h-topic-tag:hover {
+    border-color: var(--h-accent);
+    color: var(--h-accent);
+}
+
+/* Tag especial "Y muchos más" */
+.h-topic-tag--more {
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    font-size: 0.72rem;
+    max-width: 100%;
+}
+
+.h-tactic-root.light .h-topic-tag--more {
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.35);
+}
+
+.h-topic-bullet {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--h-accent);
+    flex-shrink: 0;
+}
+
+/* ── Toggle ── */
+.h-topics-toggle {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--h-accent);
+    color: var(--h-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.h-topics-toggle:hover {
+    background: var(--h-accent);
+    color: #000;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .h-more-body {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+
+    .h-more-title {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .h-more-section {
+        padding: 70px 6%;
+    }
+
+    .h-more-eyebrow {
+        margin-bottom: 40px;
+    }
+
+    .h-more-title {
+        font-size: 2.8rem;
+        margin-bottom: 24px;
+    }
+
+    .h-more-desc {
+        font-size: 0.95rem;
+    }
+
+    .h-topic-tag {
+        font-size: 0.72rem;
+        padding: 7px 12px;
+    }
+}

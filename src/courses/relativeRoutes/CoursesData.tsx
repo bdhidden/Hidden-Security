@@ -1,5 +1,5 @@
 export const COURSES_DATA = {
-    "soc-operations-and-defence": {
+    "modern-soc-operations": {
         title: "SOC",
         subtitle: "ANALYST.",
         label: "01 // TRAINING_PROGRAM",
@@ -9,7 +9,7 @@ export const COURSES_DATA = {
         roles: ["SOC ANALYST L1/L2", "INCIDENT RESPONDER", "THREAT HUNTER JUNIOR", "SECURITY MONITORING ENGINEER"],
         pdfName: "Hidden_Security_SOC_Analyst.pdf"
     },
-    "offensive-red-teaming": {
+    "threat-hunting": {
         title: "RED",
         subtitle: "TEAMER.",
         label: "02 // TRAINING_PROGRAM",
@@ -19,7 +19,7 @@ export const COURSES_DATA = {
         roles: ["RED TEAM OPERATOR", "PENETRATION TESTER", "ADVERSARY EMULATOR", "EXPLOIT DEVELOPER"],
         pdfName: "Hidden_Security_Red_Teaming.pdf"
     },
-    "forensics-and-ir": {
+    "incident-response": {
         title: "DIGITAL",
         subtitle: "FORENSICS.",
         label: "03 // TRAINING_PROGRAM",
@@ -29,7 +29,7 @@ export const COURSES_DATA = {
         roles: ["FORENSIC ANALYST", "DFIR SPECIALIST", "CYBER INVESTIGATOR", "LEGAL TECH CONSULTANT"],
         pdfName: "Hidden_Security_Forensics.pdf"
     },
-    "cloud-and-devsecops": {
+    "threat-intelligence": {
         title: "CLOUD",
         subtitle: "ARCHITECT.",
         label: "04 // TRAINING_PROGRAM",
@@ -39,7 +39,7 @@ export const COURSES_DATA = {
         roles: ["DEVSECOPS ENGINEER", "CLOUD SECURITY ARCHITECT", "SRE SPECIALIST", "PLATFORM ENGINEER"],
         pdfName: "Hidden_Security_Cloud_DevSecOps.pdf"
     },
-    "malware-analysis-and-re": {
+    "pentesting": {
         title: "REVERSE",
         subtitle: "ENGINEER.",
         label: "05 // TRAINING_PROGRAM",
@@ -49,7 +49,7 @@ export const COURSES_DATA = {
         roles: ["MALWARE ANALYST", "REVERSE ENGINEER", "THREAT INTELLIGENCE ANALYST", "VULNERABILITY RESEARCHER"],
         pdfName: "Hidden_Security_Malware_Analysis.pdf"
     },
-    "cryptographic-engineering": {
+    "grc": {
         title: "CRYPTO",
         subtitle: "ENGINEER.",
         label: "06 // TRAINING_PROGRAM",

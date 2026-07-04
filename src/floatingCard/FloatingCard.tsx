@@ -11,6 +11,7 @@ interface CardData {
   reverso: {
     titulo: string;
     subtitulo: string;
+    desc?: string;
     items: string[];
   };
 }
@@ -20,36 +21,40 @@ const datosCartas: CardData[] = [
     id: 1, 
     frente: logoHidden, 
     reverso: { 
-      titulo: 'HACKING ÉTICO', 
-      subtitulo: 'Asegurando infraestructuras críticas mediante ataques controlados.',
-      items: ['Pentesting de Redes', 'Explotación Web (OWASP)', 'Escalada de Privilegios', 'Análisis de Vulnerabilidades'] 
+      titulo: 'BLUE TEAM', 
+      subtitulo: 'Protección y respuesta ante amenazas.',
+      desc: "Especializado en la detección, investigación y respuesta frente a incidentes de seguridad para proteger los activos de una organización.",
+      items: ["Security Operations", "Threat Hunting", "Incident Response", "Digital Forensics", "Detection Engineering"] 
     } 
   },
   { 
     id: 2, 
     frente: logoHidden, 
     reverso: { 
-      titulo: 'CIBERDEFENSA', 
-      subtitulo: 'Monitoreo proactivo y respuesta ante incidentes en tiempo real.',
-      items: ['Monitoreo SIEM', 'Detección IDS/IPS', 'Hardening de Sistemas', 'Gestión de Incidentes (IR)'] 
+      titulo: 'RED TEAM', 
+      subtitulo: 'Seguridad ofensiva y evaluación',
+      desc: "Enfocado en identificar vulnerabilidades y evaluar la postura de seguridad mediante simulaciones de ataque controladas.",
+      items: ['Pentesting', 'Red Team Operations', 'Web Security', 'Active Directory Security', "Exploit Development"] 
     } 
   },
   { 
     id: 3, 
     frente: logoHidden, 
     reverso: { 
-      titulo: 'FORENSE & MALWARE', 
-      subtitulo: 'Investigación digital profunda y análisis de código malicioso.',
-      items: ['Análisis Forense Digital', 'Ingeniería Inversa', 'Análisis de Malware', 'Recuperación de Evidencias'] 
+      titulo: 'THREAT INTELLIGENCE', 
+      subtitulo: 'Inteligencia y análisis de amenazas',
+      desc: "Orientado al análisis de actores de amenaza, campañas y técnicas utilizadas para anticipar riesgos y fortalecer la defensa.",
+      items: ["Cyber Threat Intelligence", "Malware Analysis", "OSINT", "Threat Research", "Threat Profiling"] 
     } 
   },
   { 
     id: 4, 
     frente: logoHidden, 
     reverso: { 
-      titulo: 'GESTIÓN & GRC', 
-      subtitulo: 'Cumplimiento normativo y gobernanza de seguridad de la información.',
-      items: ['Normativas ISO 27001', 'Análisis de Riesgos IT', 'Políticas de Seguridad', 'Continuidad de Negocio'] 
+      titulo: 'GOVERNANCE, RISK & COMPLIANCE',
+      desc: "Centrado en la gestión del riesgo, el diseño de estrategias de seguridad y el cumplimiento de estándares y regulaciones.", 
+      subtitulo: 'Gobierno, riesgo y cumplimiento',
+      items: ['Governance', "Risk Management", "Compliance", "Security Awareness", "Auditoría y Marcos de Seguridad"] 
     } 
   },
 ];
@@ -90,7 +95,7 @@ const FloatingCardSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Nuestra Área de <span className="hc-accent">Expertise</span>
+              Dominios de <span className="hc-accent">Especialización</span>
             </motion.h2>
             <motion.p 
               className="hc-intro-text"
@@ -98,8 +103,7 @@ const FloatingCardSection: React.FC = () => {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              Explora nuestros trayectos formativos diseñados para dominar el <br />
-              panorama actual de la ciberseguridad ofensiva y defensiva.
+              Descubrí las principales áreas de la ciberseguridad y las habilidades que podrás desarrollar en cada una de ellas.
             </motion.p>
           </motion.div>
 

@@ -5,29 +5,29 @@ import './mission.css';
 
 const steps = [
   {
-    tag: "01. EL ORIGEN",
-    title: "Cerrando la brecha de confianza",
-    desc: "Nacemos de una problemática estructural: la dificultad de validar el conocimiento técnico genuino. Eliminamos la incertidumbre del reclutador y el obstáculo del profesional altamente capacitado mediante un estándar de validación único en la industria.",
+    tag: "01. EL PROBLEMA",
+    title: "Reduciendo la brecha entre aprender y demostrar",
+    desc: "Muchas personas invierten meses o años formándose, pero siguen encontrando dificultades para demostrar lo que realmente saben hacer. Al mismo tiempo, las empresas reciben cientos de perfiles sin una forma objetiva de validar sus capacidades operativas.",
   },
   {
-    tag: "02. ENTRENAMIENTO BAJO FUEGO",
-    title: "Real-World Attack Scenarios",
-    desc: "No enseñamos solo lógica teórica. Nuestros alumnos se enfrentan a infraestructuras reales y entornos hostiles diseñados para replicar incidentes de seguridad actuales. Aquí, el aprendizaje se forja en la resolución de casos que Juniors, Mids y Seniors enfrentan en su día a día profesional.",
+    tag: "02. VALIDACIÓN BASADA EN ESCENARIOS REALES",
+    title: "Demostrar habilidades, no memorizar conceptos",
+    desc: "En Hidden Security las evaluaciones se construyen sobre situaciones inspiradas en escenarios reales de ciberseguridad. Buscamos medir cómo una persona analiza, prioriza y toma decisiones, más allá de cuánto contenido pueda recordar.",
   },
   {
-    tag: "03. EVALUACIÓN DE ÉLITE",
-    title: "Exámenes de Certificación Técnica",
-    desc: "Obtener nuestra certificación no es un trámite; es un logro. Sometemos al alumno a exámenes de alta exigencia donde la única forma de aprobar es demostrando capacidad analítica y técnica ante vectores de ataque y defensa complejos.",
+    tag: "03. CERTIFICACIONES CON ENFOQUE OPERATIVO",
+    title: "Validar la capacidad de actuar",
+    desc: "Nuestras certificaciones están diseñadas para evaluar habilidades técnicas y pensamiento analítico aplicado a funciones específicas dentro de la industria. Cada certificación representa una validación práctica del desempeño esperado para ese rol.",
   },
   {
-    tag: "04. DESARROLLO PERSONALIZADO",
-    title: "Acompañamiento y Mentoring",
-    desc: "Entendemos que el desarrollo profesional es una carrera de fondo. Acompañamos el crecimiento del alumno con feedback técnico profundo, asegurando que su evolución sea óptima, realista y alineada con las demandas cambiantes del mercado global de ciberseguridad.",
+    tag: "04. CRECIMIENTO PROFESIONAL",
+    title: "Aprender, validar y evolucionar",
+    desc: "La certificación es solo una parte del camino. El objetivo es acompañar el desarrollo profesional mediante formación continua, nuevas certificaciones y una evolución alineada con las necesidades reales del mercado.",
   },
   {
-    tag: "05. EL RESULTADO",
-    title: "Garantía de Empleabilidad",
-    desc: "Al graduarse, el alumno accede a una bolsa de trabajo exclusiva y de alto renombre. Actuamos como un sello de garantía: las empresas contratan con la certeza absoluta de que el talento posee la experiencia práctica necesaria para proteger sus activos desde el primer día.",
+    tag: "05. CONECTANDO TALENTO CON EMPRESAS",
+    title: "Generando confianza para ambas partes",
+    desc: "Facilitamos el encuentro entre profesionales y organizaciones mediante perfiles con habilidades validadas. No reemplazamos los procesos de selección de las empresas; aportamos una nueva forma de generar confianza antes de la contratación.",
   }
 ];
 

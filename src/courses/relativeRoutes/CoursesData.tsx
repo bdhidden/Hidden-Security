@@ -1,10 +1,10 @@
 export const COURSES_DATA = {
     "modern-soc-operations": {
-        title: "SOC",
-        subtitle: "ANALYST.",
+        title: "MODERN SOC",
+        subtitle: "Operations.",
         label: "01 // TRAINING_PROGRAM",
         intro: "Formación avanzada en operaciones de seguridad. Domina la detección, análisis y respuesta ante incidentes en infraestructuras críticas.",
-        stats: { time: "120H", modules: "12", mode: "REMOTE" },
+        stats: { time: "120H", modules: "12", mode: "ASINCRÓNICA" },
         curriculum: "Semana 1-3: Fundamentos de Networking y Seguridad Operativa. <br/> Semana 4-6: Implementación y Monitoreo con SIEM (Splunk/ELK). <br/> Semana 7-9: Threat Hunting y Análisis de Malware. <br/> Semana 10-12: Protocolos de Respuesta ante Incidentes y Reporting Senior.",
         roles: ["SOC ANALYST L1/L2", "INCIDENT RESPONDER", "THREAT HUNTER JUNIOR", "SECURITY MONITORING ENGINEER"],
         pdfName: "Hidden_Security_SOC_Analyst.pdf"

@@ -49,23 +49,23 @@
 
 .h-label-mono {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 20px;
-    letter-spacing: 4px;
+    font-size: 13px !important;
+    letter-spacing: 3px;
     color: var(--h-accent);
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 1rem !important;
     font-weight: 500;
 }
 
 .h-massive-title {
-    font-size: clamp(2.5rem, 6vw, 6rem);
+    font-size: clamp(2rem, 5vw, 5rem);
     line-height: 0.85;
     margin: 0;
     text-transform: uppercase;
     color: #ccff00;
 }
 
-.light .h-massive-title{
+.light .h-massive-title {
     color: #ff5500;
 }
 
@@ -83,7 +83,7 @@
     color: white;
     max-width: 800px;
     margin-top: 2.5rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.7;
     opacity: 0.8;
     border-left: 3px solid var(--h-accent);
@@ -91,7 +91,9 @@
     height: 100px;
 }
 
-.light .h-intro-p{ color: black; }
+.light .h-intro-p { color: black; }
+
+/* ─── HORIZON / STRIPS ─────────────────────────────────────────────────────── */
 
 .h-tactic-horizon {
     height: 75vh;
@@ -115,7 +117,9 @@
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    padding: 60px 40px;
+    padding: 0;
+    /* Permite scroll vertical en mobile sin interferencia */
+    touch-action: pan-y;
 }
 
 .h-strip-bg {
@@ -133,42 +137,52 @@
 .h-strip-overlay {
     position: absolute;
     inset: 0;
-
     background: linear-gradient(
-        to top, 
-        rgba(0, 0, 0, 0.95) 10%, 
-        rgba(0, 0, 0, 0.4) 50%, 
+        to top,
+        rgba(0, 0, 0, 0.97) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
         transparent 100%
     );
 }
 
+/* ── TARJETA CERRADA ── */
 .h-strip-collapsed {
     position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px 8px;
+    z-index: 10;
+    overflow: hidden;
 }
 
 .h-strip-id {
     font-family: 'JetBrains Mono', monospace;
     color: var(--h-accent);
     font-weight: 900;
-    font-size: 1.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    flex-shrink: 0;
 }
 
 .h-strip-vertical-title {
     writing-mode: vertical-lr;
     text-transform: uppercase;
     color: #ffffff;
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
     white-space: nowrap;
-    opacity: 0.8;
+    opacity: 0.85;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-height: 60%;
 }
 
 .h-tactic-root.light .h-strip-vertical-title {
@@ -176,56 +190,92 @@
     opacity: 0.4;
 }
 
+/* ── TARJETA ABIERTA ── */
 .h-strip-expanded {
     position: relative;
     z-index: 10;
-    max-width: 650px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px 36px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-.h-expanded-header h2 {
-    font-size: clamp(1.8rem, 4vw, 3.2rem);
+.h-expanded-header {
+    margin-bottom: 12px;
+}
+
+.h-expanded-header .h-label-mono {
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.h-expanded-header h2,
+.h-title {
+    font-size: clamp(1.2rem, 2vw, 2rem);
     text-transform: uppercase;
-    line-height: 1;
-    margin: 15px 0;
+    line-height: 1.05;
+    margin: 8px 0 6px;
     color: #ffffff;
     font-weight: 900;
+    word-break: break-word;
+}
+
+.h-expanded-header .h-label-mono:last-child {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 0;
+    opacity: 0.7;
 }
 
 .h-expanded-desc {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
     font-weight: 400;
+    margin: 0 0 16px;
+    /* Limita a 4 líneas para que nunca desborde */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.txt-disabled {
+    opacity: 0.35;
 }
 
 .h-nav-button {
-    margin-top: 2rem;
+    margin-top: 16px;
     background: var(--h-accent);
     color: #000;
     border: none;
-    padding: 12px 24px;
+    padding: 10px 20px;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 900;
-    font-size: 0.9rem;
+    font-size: 0.72rem;
     cursor: pointer;
     letter-spacing: 2px;
     transition: all 0.3s ease;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0% 30%);
+    flex-shrink: 0;
+    align-self: flex-start;
 }
 
 .h-nav-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(204, 255, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(204, 255, 0, 0.35);
     filter: brightness(1.1);
 }
 
-.h-tactic-strip.is-locked {
-    cursor: default;
-}
+.h-tactic-strip.is-locked { cursor: default; }
+.h-tactic-strip.is-active { cursor: default; }
 
-.h-tactic-strip.is-active {
-    cursor: default; 
-}
+/* ─── RESPONSIVE DESKTOP ───────────────────────────────────────────────────── */
 
 @media (max-width: 1200px) {
     .h-title-logo-flex {
@@ -238,15 +288,20 @@
         order: -1;
     }
     .h-massive-title {
-        font-size: 4rem;
+        font-size: 3.5rem;
+    }
+    .h-expanded-header h2,
+    .h-title {
+        font-size: clamp(1rem, 1.8vw, 1.8rem);
     }
 }
 
+/* ─── RESPONSIVE MOBILE ────────────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
-    .h-massive-title{ font-size: 2.5rem; }
+    .h-massive-title { font-size: 2.2rem; }
 
     .h-outline {
-        color: transparent;
         -webkit-text-stroke: 1px var(--h-text);
     }
 
@@ -254,7 +309,7 @@
         padding: 40px 6% 30px;
     }
 
-    .h-label-mono{ font-size: 14px; }
+    .h-label-mono { font-size: 11px; }
 
     .h-tactic-horizon {
         height: auto;
@@ -264,8 +319,7 @@
         flex-direction: column;
     }
 
-    .h-title{ font-size: 1rem; }
-
+    /* ── Tira cerrada mobile ── */
     .h-tactic-strip {
         width: 100% !important;
         height: auto;
@@ -273,46 +327,67 @@
         border-right: none;
         border-bottom: 1px solid var(--h-border);
         align-items: flex-start;
-        padding-top: 20px;
     }
 
     .h-strip-collapsed {
         position: relative;
-        top: 0; 
-        left: 0; 
-        transform: none;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
         flex-direction: row;
-        padding: 25px;
-        gap: 20px;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 20px 24px;
+        gap: 16px;
         width: 100%;
     }
 
     .h-strip-vertical-title {
         writing-mode: horizontal-tb;
-        font-size: 14px;
-        opacity: 0.8;
+        font-size: 11px;
+        letter-spacing: 2px;
+        opacity: 0.85;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: calc(100% - 60px);
     }
 
+    /* ── Tira abierta mobile ── */
     .h-strip-expanded {
-        padding: 10px 25px 50px 25px;
+        padding: 24px 24px 40px;
+        justify-content: flex-end;
+        height: 100%;
     }
 
-    .h-expanded-header h2 {
-        font-size: 2.2rem;
+    .h-expanded-header h2,
+    .h-title {
+        font-size: 1.35rem;
+    }
+
+    .h-expanded-desc {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 5;
+    }
+
+    .h-nav-button {
+        font-size: 0.65rem;
+        padding: 9px 16px;
     }
 
     .h-intro-p {
-        height: 200px;
+        height: auto;
+        min-height: 0;
         margin-top: 2rem;
         padding-left: 20px;
-        font-size: 1rem;
-        min-height: auto;
+        font-size: 0.95rem;
+        height: 180px;
     }
 }
 
 /* ==========================================================================
    SECCIÓN: Y MUCHO MÁS
-   Agregar al final de cursoParam.css
    ========================================================================== */
 
 .h-more-section {
@@ -321,7 +396,6 @@
     padding: 100px 5%;
 }
 
-/* ── Eyebrow ── */
 .h-more-eyebrow {
     display: flex;
     align-items: center;
@@ -335,7 +409,6 @@
     background: var(--h-border);
 }
 
-/* ── Layout dos columnas ── */
 .h-more-body {
     display: grid;
     grid-template-columns: 1fr 1.4fr;
@@ -343,11 +416,10 @@
     align-items: start;
 }
 
-/* ── Columna izquierda ── */
 .h-more-title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
-    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
     line-height: 0.9;
     text-transform: uppercase;
     color: var(--h-text);
@@ -365,7 +437,7 @@
 
 .h-more-desc {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.65);
     margin-bottom: 16px;
@@ -378,14 +450,13 @@
 
 .h-more-subdesc {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     letter-spacing: 2px;
     color: var(--h-accent);
     margin-top: 32px;
     text-transform: uppercase;
 }
 
-/* ── Columna derecha: grid de tags ── */
 .h-more-right {
     display: flex;
     flex-direction: column;
@@ -403,10 +474,10 @@
     align-items: center;
     gap: 8px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.5px;
-    padding: 8px 14px;
+    padding: 7px 13px;
     border: 1px solid var(--h-border);
     color: rgba(255, 255, 255, 0.75);
     background: transparent;
@@ -429,13 +500,12 @@
     color: var(--h-accent);
 }
 
-/* Tag especial "Y muchos más" */
 .h-topic-tag--more {
     border-style: dashed;
     border-color: rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.4);
     font-style: italic;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     max-width: 100%;
 }
 
@@ -446,19 +516,18 @@
 
 .h-topic-bullet {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--h-accent);
     flex-shrink: 0;
 }
 
-/* ── Toggle ── */
 .h-topics-toggle {
     align-self: flex-start;
     background: transparent;
     border: 1px solid var(--h-accent);
     color: var(--h-accent);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 2px;
     padding: 10px 20px;
@@ -471,15 +540,13 @@
     color: #000;
 }
 
-/* ── Responsive ── */
 @media (max-width: 1024px) {
     .h-more-body {
         grid-template-columns: 1fr;
         gap: 48px;
     }
-
     .h-more-title {
-        font-size: 3.5rem;
+        font-size: 3rem;
     }
 }
 
@@ -487,22 +554,18 @@
     .h-more-section {
         padding: 70px 6%;
     }
-
     .h-more-eyebrow {
         margin-bottom: 40px;
     }
-
     .h-more-title {
-        font-size: 2.8rem;
+        font-size: 2.5rem;
         margin-bottom: 24px;
     }
-
     .h-more-desc {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
-
     .h-topic-tag {
-        font-size: 0.72rem;
-        padding: 7px 12px;
+        font-size: 0.7rem;
+        padding: 6px 11px;
     }
 }

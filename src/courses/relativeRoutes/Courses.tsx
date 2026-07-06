@@ -8,7 +8,7 @@ import { COURSES_DATA } from './CoursesData';
 const Courses: React.FC = () => {
     const { theme } = UseTheme();
     const { courseSlug } = useParams();
-    
+
     const data = COURSES_DATA[courseSlug as keyof typeof COURSES_DATA];
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const Courses: React.FC = () => {
 
     const handleDownloadPDF = () => {
         const link = document.createElement('a');
-        link.href = "/pdf/prueba.pdf"; 
+        link.href = "/pdf/prueba.pdf";
         link.download = data.pdfName;
         document.body.appendChild(link);
         link.click();
@@ -29,6 +29,8 @@ const Courses: React.FC = () => {
     return (
         <main className={`hidden-courses-root ${theme}`}>
             <div className="h-container">
+
+                {/* ── 01 HERO ── */}
                 <section className="h-node-hero">
                     <div className="h-hero-text">
                         <span className="h-label-mono">{data.label}</span>
@@ -38,7 +40,6 @@ const Courses: React.FC = () => {
                         <div className="h-intro-box">
                             <LiveTypingText text={data.intro} />
                         </div>
-                        
                         <div className="h-quick-stats">
                             <div className="h-stat">
                                 <span className="h-stat-num">{data.stats.time}</span>
@@ -64,18 +65,42 @@ const Courses: React.FC = () => {
                     </div>
                 </section>
 
+                {/* ── 02 PÚBLICO Y HABILIDADES ── */}
                 <section className="h-node-content">
                     <div className="h-content-grid">
                         <div className="h-content-main">
                             <span className="h-label-mono">02 // CURRICULUM_OVERVIEW</span>
-                            <h2 className="h-section-title Montserrat-900">¿QUÉ VAS A DOMINAR?</h2>
-                            <p className="h-p-text">
-                                El alumno se sumergirá en un entorno de simulación real, aprendiendo a gestionar SIEM, análisis de tráfico de red, y respuesta forense. La carrera está diseñada para transformar un perfil técnico en un operador de defensa proactivo.
-                            </p>
-                            
+
+                            {/* Público objetivo */}
+                            <div className="h-audience-block">
+                                <h3 className="h-sub Montserrat-900">PÚBLICO OBJETIVO</h3>
+                                <p className="h-p-text">{data.audience}</p>
+                            </div>
+
+                            {/* Objetivo general */}
+                            <div className="h-audience-block">
+                                <h3 className="h-sub Montserrat-900">OBJETIVO GENERAL</h3>
+                                <p className="h-p-text">{data.objective}</p>
+                            </div>
+
+                            {/* Habilidades */}
+                            <h2 className="h-section-title Montserrat-900">{data.skillsTitle}</h2>
+                            <p className="h-p-text">{data.skillsDesc}</p>
+
+                            {/* Módulos */}
                             <div className="h-cronograma">
-                                <h3 className="h-sub Montserrat-900">CRONOGRAMA DE ESTUDIO</h3>
-                                <p className="h-p-small" dangerouslySetInnerHTML={{ __html: data.curriculum }} />
+                                <h3 className="h-sub Montserrat-900">CONTENIDO DEL PROGRAMA</h3>
+                                <div className="h-modules-list">
+                                    {data.modules.map((mod) => (
+                                        <div key={mod.number} className="h-module-item">
+                                            <span className="h-module-num">{mod.number !== "—" ? `MÓDULO ${mod.number}` : "—"}</span>
+                                            <div className="h-module-body">
+                                                <span className="h-module-title">{mod.title}</span>
+                                                <p className="h-module-desc">{mod.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
                             <button onClick={handleDownloadPDF} className="h-pdf-btn">
@@ -85,11 +110,14 @@ const Courses: React.FC = () => {
                     </div>
                 </section>
 
+                {/* ── 03 SALIDA LABORAL ── */}
                 <section className="h-node-career">
                     <div className="h-career-card">
                         <div className="h-career-header">
                             <span className="h-label-mono">03 // PROFESSIONAL_OUTLOOK</span>
-                            <h2 className="h-section-title Montserrat-900">SALIDA LABORAL</h2>
+                            <h2 className="h-section-title Montserrat-900">TU CAMINO PROFESIONAL</h2>
+                            <p className="h-p-text">{data.careerIntro}</p>
+                            <p className="h-sub Montserrat-900" style={{ marginTop: "2rem" }}>POSIBLES CAMINOS PROFESIONALES</p>
                         </div>
                         <div className="h-roles-grid">
                             {data.roles.map((role, idx) => (
@@ -100,13 +128,14 @@ const Courses: React.FC = () => {
 
                     <div className="h-bolsa-trabajo">
                         <div className="h-bolsa-text">
-                            <h2 className="Montserrat-900">BOLSA DE TRABAJO <span className="h-accent-text">HIDDEN_NETWORK</span></h2>
-                            <p className="h-p-text">
-                                Al finalizar el programa, tendrás la posibilidad de adquirir el <strong>Examen Final de Certificación</strong>. Al aprobar, accederás automáticamente a nuestra <strong>Bolsa de Trabajo Exclusiva</strong>.
-                            </p>
+                            <h2 className="Montserrat-900">
+                                <span className="h-accent-text">{data.certTitle}</span>
+                            </h2>
+                            <p className="h-p-text">{data.certDesc}</p>
                         </div>
                     </div>
                 </section>
+
             </div>
         </main>
     );

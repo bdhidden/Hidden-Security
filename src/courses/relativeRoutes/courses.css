@@ -98,8 +98,8 @@
     margin-bottom: 120px;
 }
 
-.h-section-title { font-size: 2.5rem; margin-bottom: 2rem; }
-.h-p-text { font-size: 1.3rem; line-height: 1.6; opacity: 0.7; max-width: 800px; }
+.h-section-title { font-size: 2rem; margin-bottom: 2rem; }
+.h-p-text { font-size: 1rem; line-height: 1.6; opacity: 0.7; max-width: 800px; }
 
 .h-cronograma {
     background: rgba(var(--h-accent), 0.03);
@@ -108,7 +108,7 @@
     border-left: 4px solid var(--h-accent);
 }
 
-.h-sub { font-size: 1.4rem; color: var(--h-accent); margin-bottom: 1rem; }
+.h-sub { font-size: 1.2rem; color: var(--h-accent); margin-bottom: 1rem; }
 .h-p-small { font-family: 'Montserrat', monospace; font-size: 1.4rem; line-height: 2; opacity: 0.9; }
 
 .h-pdf-btn {
@@ -150,6 +150,81 @@
 .h-role-item:hover { background: var(--h-accent); color: #000; border-color: var(--h-accent); }
 
 .h-accent-text { color: var(--h-accent); }
+
+/* ── AUDIENCE BLOCK ── */
+.h-audience-block {
+    margin-bottom: 40px;
+}
+
+/* ── MÓDULOS ── */
+.h-modules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 16px;
+}
+
+.h-module-item {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--h-border);
+    align-items: start;
+}
+
+.h-module-item:last-child {
+    border-bottom: none;
+}
+
+.h-module-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--h-accent);
+    padding-top: 3px;
+    flex-shrink: 0;
+}
+
+.h-module-title {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    color: var(--h-text);
+}
+
+.h-module-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    opacity: 0.65;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .h-sub{ font-size: 20px; }
+    .h-module-item {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .h-module-num {
+        font-size: 0.65rem;
+    }
+
+    .h-module-title {
+        font-size: 0.85rem;
+    }
+
+    .h-module-desc {
+        font-size: 0.82rem;
+    }
+}
 
 @media (max-width: 1024px) {
     .h-node-hero { 

@@ -8,7 +8,7 @@
     background: var(--h-bg);
     min-height: 100vh;
     padding-top: 80px;
-    overflow-x: hidden;
+    overflow: hidden;
     transition: background-color 0.5s ease, color 0.5s ease;
     font-family: 'Montserrat', sans-serif;
 }

@@ -1,62 +1,203 @@
-export const COURSES_DATA = {
-    "modern-soc-operations": {
-        title: "MODERN SOC",
-        subtitle: "Operations.",
-        label: "01 // TRAINING_PROGRAM",
-        intro: "Formación avanzada en operaciones de seguridad. Domina la detección, análisis y respuesta ante incidentes en infraestructuras críticas.",
-        stats: { time: "120H", modules: "12", mode: "ASINCRÓNICA" },
-        curriculum: "Semana 1-3: Fundamentos de Networking y Seguridad Operativa. <br/> Semana 4-6: Implementación y Monitoreo con SIEM (Splunk/ELK). <br/> Semana 7-9: Threat Hunting y Análisis de Malware. <br/> Semana 10-12: Protocolos de Respuesta ante Incidentes y Reporting Senior.",
-        roles: ["SOC ANALYST L1/L2", "INCIDENT RESPONDER", "THREAT HUNTER JUNIOR", "SECURITY MONITORING ENGINEER"],
-        pdfName: "Hidden_Security_SOC_Analyst.pdf"
-    },
-    "threat-hunting": {
-        title: "RED",
-        subtitle: "TEAMER.",
-        label: "02 // TRAINING_PROGRAM",
-        intro: "Especialización en simulación de adversarios y tácticas de intrusión avanzada para evaluar la resiliencia de activos críticos.",
-        stats: { time: "150H", modules: "15", mode: "REMOTE" },
-        curriculum: "Módulo 1: Reconocimiento y OSINT Avanzado. <br/> Módulo 2: Explotación de Perímetros y Evasión de EDR. <br/> Módulo 3: Movimiento Lateral y Persistencia. <br/> Módulo 4: Exfiltración de Datos y Simulación de Ransomware.",
-        roles: ["RED TEAM OPERATOR", "PENETRATION TESTER", "ADVERSARY EMULATOR", "EXPLOIT DEVELOPER"],
-        pdfName: "Hidden_Security_Red_Teaming.pdf"
-    },
-    "incident-response": {
-        title: "DIGITAL",
-        subtitle: "FORENSICS.",
-        label: "03 // TRAINING_PROGRAM",
-        intro: "Domina el arte de la investigación digital y la respuesta ante brechas de seguridad masivas bajo estándares forenses internacionales.",
-        stats: { time: "100H", modules: "10", mode: "REMOTE" },
-        curriculum: "Fase 1: Adquisición de Memoria y Disco. <br/> Fase 2: Análisis de Artefactos Windows/Linux. <br/> Fase 3: Timeline Analysis y Reconstrucción de Ataques. <br/> Fase 4: Cadena de Custodia y Peritaje Judicial.",
-        roles: ["FORENSIC ANALYST", "DFIR SPECIALIST", "CYBER INVESTIGATOR", "LEGAL TECH CONSULTANT"],
-        pdfName: "Hidden_Security_Forensics.pdf"
-    },
-    "threat-intelligence": {
-        title: "CLOUD",
-        subtitle: "ARCHITECT.",
-        label: "04 // TRAINING_PROGRAM",
-        intro: "Asegura infraestructuras modernas en AWS, Azure y GCP integrando seguridad automatizada en cada paso del pipeline de desarrollo.",
-        stats: { time: "130H", modules: "11", mode: "REMOTE" },
-        curriculum: "Parte 1: Infrastructure as Code (Terraform) Seguro. <br/> Parte 2: Seguridad en Contenedores y Kubernetes. <br/> Parte 3: Pipelines DevSecOps y Análisis Estático/Dinámico. <br/> Parte 4: Gestión de Identidades y Secretos en la Nube.",
-        roles: ["DEVSECOPS ENGINEER", "CLOUD SECURITY ARCHITECT", "SRE SPECIALIST", "PLATFORM ENGINEER"],
-        pdfName: "Hidden_Security_Cloud_DevSecOps.pdf"
-    },
-    "pentesting": {
-        title: "REVERSE",
-        subtitle: "ENGINEER.",
-        label: "05 // TRAINING_PROGRAM",
-        intro: "Desensambla y comprende el comportamiento del software malicioso mediante ingeniería inversa y análisis dinámico avanzado.",
-        stats: { time: "160H", modules: "14", mode: "REMOTE" },
-        curriculum: "Nivel 1: Arquitectura x86/x64 y Lenguaje Ensamblador. <br/> Nivel 2: Análisis Estático y Desempaquetado de Malware. <br/> Nivel 3: Depuración y Análisis Dinámico. <br/> Nivel 4: De-obfuscation y Análisis de Shellcode.",
-        roles: ["MALWARE ANALYST", "REVERSE ENGINEER", "THREAT INTELLIGENCE ANALYST", "VULNERABILITY RESEARCHER"],
-        pdfName: "Hidden_Security_Malware_Analysis.pdf"
-    },
-    "grc": {
-        title: "CRYPTO",
-        subtitle: "ENGINEER.",
-        label: "06 // TRAINING_PROGRAM",
-        intro: "Diseña e implementa sistemas de cifrado robustos y arquitecturas Zero Trust para proteger el activo más valioso: la información.",
-        stats: { time: "90H", modules: "8", mode: "REMOTE" },
-        curriculum: "Semana 1: Criptografía Simétrica y Asimétrica Aplicada. <br/> Semana 2: Firma Digital e Infraestructura de Clave Pública (PKI). <br/> Semana 3: Criptografía Post-Cuántica y Protocolos Modernos. <br/> Semana 4: Implementación de Modelos Zero Trust.",
-        roles: ["CRYPTOGRAPHER", "SECURITY PROTOCOL ENGINEER", "BLOCKCHAIN SECURITY EXPERT", "PRIVACY ENGINEER"],
-        pdfName: "Hidden_Security_Cryptographic_Eng.pdf"
-    }
+// ─── Tipos ────────────────────────────────────────────────────────────────────
+export interface CourseModule {
+  number: string;
+  title: string;
+  desc: string;
+}
+
+export interface CourseData {
+  title: string;
+  subtitle: string;
+  label: string;
+  intro: string;
+  stats: { time: string; modules: string; mode: string };
+  // Sección 02
+  audience: string;
+  objective: string;
+  skillsTitle: string;
+  skillsDesc: string;
+  // Módulos
+  modules: CourseModule[];
+  // Sección 03
+  careerIntro: string;
+  roles: string[];
+  certTitle: string;
+  certDesc: string;
+  pdfName: string;
+}
+
+// ─── Datos ────────────────────────────────────────────────────────────────────
+export const COURSES_DATA: Record<string, CourseData> = {
+
+  "modern-soc-operations": {
+    title: "MODERN SOC",
+    subtitle: "Operations.",
+    label: "01 // TRAINING_PROGRAM",
+    intro: "Formación avanzada en operaciones de seguridad. Domina la detección, análisis y respuesta ante incidentes en infraestructuras críticas.",
+    stats: { time: "120H", modules: "13", mode: "ASINCRÓNICA" },
+
+    audience: "Personas que buscan iniciar o desarrollar una carrera en un Centro de Operaciones de Seguridad (SOC), adquiriendo las habilidades técnicas, operativas y analíticas que demanda la industria actual.",
+    objective: "Formar profesionales capaces de monitorear, investigar y responder a eventos e incidentes de seguridad en un Centro de Operaciones de Seguridad moderno, desarrollando pensamiento analítico, criterio técnico y capacidad de toma de decisiones en escenarios inspirados en situaciones reales.",
+
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "A lo largo del programa desarrollarás las competencias necesarias para desempeñarte en un Centro de Operaciones de Seguridad moderno. Aprenderás a interpretar alertas, analizar eventos, investigar incidentes, comprender el comportamiento de las amenazas y utilizar las herramientas más utilizadas por los equipos de Blue Team, fortaleciendo el pensamiento analítico y la toma de decisiones frente a escenarios reales.",
+
+    modules: [
+      {
+        number: "00",
+        title: "Introducción",
+        desc: "Conocé cómo funciona el programa, la metodología de aprendizaje y el recorrido que realizarás durante toda la formación.",
+      },
+      {
+        number: "01",
+        title: "Introducción al Rol SOC",
+        desc: "Comprendé cómo funciona un Centro de Operaciones de Seguridad, cuáles son las responsabilidades de un analista y cómo se integra dentro de la estrategia de seguridad de una organización.",
+      },
+      {
+        number: "02",
+        title: "Fundamentos de Ciberseguridad",
+        desc: "Incorporá los conceptos esenciales sobre amenazas, vulnerabilidades, gestión de riesgos y principios fundamentales de seguridad informática.",
+      },
+      {
+        number: "03",
+        title: "Redes y Sistemas",
+        desc: "Aprendé el funcionamiento de redes, protocolos y sistemas operativos desde la perspectiva de un analista SOC para interpretar correctamente la actividad observada en los eventos de seguridad.",
+      },
+      {
+        number: "04",
+        title: "Malware y TTPs",
+        desc: "Analizá el comportamiento de las principales amenazas, comprendiendo cómo operan los atacantes y cómo identificar sus técnicas utilizando marcos como MITRE ATT&CK.",
+      },
+      {
+        number: "05",
+        title: "Análisis de Alertas y Eventos",
+        desc: "Desarrollá la capacidad de investigar alertas de seguridad, correlacionar eventos, reducir falsos positivos y priorizar incidentes según su criticidad.",
+      },
+      {
+        number: "06",
+        title: "Respuesta Inicial a Incidentes",
+        desc: "Aprendé las primeras acciones frente a un incidente de seguridad, criterios de escalamiento, documentación y comunicación con otros equipos.",
+      },
+      {
+        number: "07",
+        title: "Automatización, Inteligencia Artificial y Herramientas",
+        desc: "Comprendé cómo aprovechar herramientas modernas, automatización e inteligencia artificial como apoyo al análisis, aprendiendo también a validar sus resultados mediante criterio técnico.",
+      },
+      {
+        number: "08",
+        title: "Soft Skills, Ética y Desarrollo Profesional",
+        desc: "Fortalecé habilidades de comunicación, pensamiento crítico, trabajo en equipo y ética profesional, competencias fundamentales para desarrollarte en la industria de la ciberseguridad.",
+      },
+    ],
+
+    careerIntro: "Al finalizar el programa contarás con una base sólida para desempeñarte en equipos de seguridad y continuar especializándote en distintas áreas de la ciberseguridad.",
+    roles: ["SOC ANALYST", "INCIDENT RESPONSE", "THREAT HUNTING", "THREAT INTELLIGENCE", "SECURITY MONITORING", "DIGITAL FORENSICS"],
+
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la Certificación SOC Analyst, diseñada para validar tus habilidades mediante escenarios prácticos inspirados en situaciones reales. Quienes obtengan la certificación podrán formar parte de la bolsa de talento de Hidden Security, donde las empresas podrán identificar perfiles validados para sus procesos de selección.",
+
+    pdfName: "Hidden_Security_SOC_Analyst.pdf",
+  },
+
+  // ─── EN DESARROLLO ────────────────────────────────────────────────────────
+
+  "threat-hunting": {
+    title: "THREAT",
+    subtitle: "Hunting.",
+    label: "02 // TRAINING_PROGRAM",
+    intro: "Especialización en búsqueda proactiva de amenazas que logran evadir los mecanismos tradicionales de seguridad.",
+    stats: { time: "—", modules: "—", mode: "ASINCRÓNICA" },
+    audience: "Curso en desarrollo. Próximamente disponible.",
+    objective: "Próximamente.",
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "Próximamente.",
+    modules: [
+      { number: "—", title: "Contenido en desarrollo", desc: "Este programa se encuentra actualmente en producción. Pronto estará disponible." },
+    ],
+    careerIntro: "Próximamente.",
+    roles: ["THREAT HUNTER", "SOC ANALYST L2/L3", "DETECTION ENGINEER", "SECURITY RESEARCHER"],
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la certificación correspondiente y acceder a la bolsa de talento de Hidden Security.",
+    pdfName: "Hidden_Security_Threat_Hunting.pdf",
+  },
+
+  "incident-response": {
+    title: "INCIDENT",
+    subtitle: "Response.",
+    label: "03 // TRAINING_PROGRAM",
+    intro: "Domina el ciclo completo de respuesta ante incidentes de seguridad en entornos corporativos reales.",
+    stats: { time: "—", modules: "—", mode: "ASINCRÓNICA" },
+    audience: "Curso en desarrollo. Próximamente disponible.",
+    objective: "Próximamente.",
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "Próximamente.",
+    modules: [
+      { number: "—", title: "Contenido en desarrollo", desc: "Este programa se encuentra actualmente en producción. Pronto estará disponible." },
+    ],
+    careerIntro: "Próximamente.",
+    roles: ["INCIDENT RESPONDER", "DFIR SPECIALIST", "FORENSIC ANALYST", "CYBER INVESTIGATOR"],
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la certificación correspondiente y acceder a la bolsa de talento de Hidden Security.",
+    pdfName: "Hidden_Security_Incident_Response.pdf",
+  },
+
+  "threat-intelligence": {
+    title: "THREAT",
+    subtitle: "Intelligence.",
+    label: "04 // TRAINING_PROGRAM",
+    intro: "Analizá actores de amenazas, campañas y TTPs para transformar información en inteligencia accionable.",
+    stats: { time: "—", modules: "—", mode: "ASINCRÓNICA" },
+    audience: "Curso en desarrollo. Próximamente disponible.",
+    objective: "Próximamente.",
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "Próximamente.",
+    modules: [
+      { number: "—", title: "Contenido en desarrollo", desc: "Este programa se encuentra actualmente en producción. Pronto estará disponible." },
+    ],
+    careerIntro: "Próximamente.",
+    roles: ["THREAT INTELLIGENCE ANALYST", "CTI SPECIALIST", "MALWARE ANALYST", "THREAT RESEARCHER"],
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la certificación correspondiente y acceder a la bolsa de talento de Hidden Security.",
+    pdfName: "Hidden_Security_Threat_Intelligence.pdf",
+  },
+
+  "pentesting": {
+    title: "ETHICAL",
+    subtitle: "Pentesting.",
+    label: "05 // TRAINING_PROGRAM",
+    intro: "Comprendé cómo piensan y trabajan los atacantes mediante pruebas de penetración controladas.",
+    stats: { time: "—", modules: "—", mode: "ASINCRÓNICA" },
+    audience: "Curso en desarrollo. Próximamente disponible.",
+    objective: "Próximamente.",
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "Próximamente.",
+    modules: [
+      { number: "—", title: "Contenido en desarrollo", desc: "Este programa se encuentra actualmente en producción. Pronto estará disponible." },
+    ],
+    careerIntro: "Próximamente.",
+    roles: ["PENETRATION TESTER", "RED TEAM OPERATOR", "VULNERABILITY RESEARCHER", "WEB SECURITY ANALYST"],
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la certificación correspondiente y acceder a la bolsa de talento de Hidden Security.",
+    pdfName: "Hidden_Security_Pentesting.pdf",
+  },
+
+  "grc": {
+    title: "GOVERNANCE RISK",
+    subtitle: "& Compliance.",
+    label: "06 // TRAINING_PROGRAM",
+    intro: "Desarrollá una visión estratégica de la ciberseguridad gestionando riesgos, controles y marcos normativos.",
+    stats: { time: "—", modules: "—", mode: "ASINCRÓNICA" },
+    audience: "Curso en desarrollo. Próximamente disponible.",
+    objective: "Próximamente.",
+    skillsTitle: "¿Qué habilidades vas a desarrollar?",
+    skillsDesc: "Próximamente.",
+    modules: [
+      { number: "—", title: "Contenido en desarrollo", desc: "Este programa se encuentra actualmente en producción. Pronto estará disponible." },
+    ],
+    careerIntro: "Próximamente.",
+    roles: ["GRC ANALYST", "RISK MANAGER", "COMPLIANCE OFFICER", "SECURITY AUDITOR"],
+    certTitle: "Certificación y Empleabilidad",
+    certDesc: "Al finalizar el curso podrás optar por rendir la certificación correspondiente y acceder a la bolsa de talento de Hidden Security.",
+    pdfName: "Hidden_Security_GRC.pdf",
+  },
 };

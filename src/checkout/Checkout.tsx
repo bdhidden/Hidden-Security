@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams/* , useNavigate */ } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UseTheme } from "../contexts/ThemeContext";
 import { UseCart } from "../contexts/CartContext";
@@ -9,7 +9,7 @@ import axios from "axios";
 import "./checkout.css";
 import Error from "../processMessages/Error";
 import Loader from "../loader/Loader";
-import useMercadoPago from "../hooks/useMercadoPago";
+/* import useMercadoPago from "../hooks/useMercadoPago"; */
 import CreditCard from "../ui/creditCard/CreditCard";
 import ProcessOk from "../processMessages/ProcessOk";
 
@@ -154,8 +154,8 @@ function PurchaseBlockedBanner({ title, detail }: { title: string; detail: strin
 // ─── Checkout ──────────────────────────────────────────────────────────────────
 const Checkout = () => {
     const { planId } = useParams();
-    const navigate   = useNavigate();
-    const mp         = useMercadoPago();
+    /* const navigate   = useNavigate();
+    const mp         = useMercadoPago(); */
     const [idempotencyKey] = useState(v4());
     const { theme }  = UseTheme();
     const { user }   = UseSession();

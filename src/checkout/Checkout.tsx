@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useParams/* , useNavigate */ } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UseTheme } from "../contexts/ThemeContext";
 import { UseCart } from "../contexts/CartContext";
@@ -45,11 +45,11 @@ const ALL_PLANS = [
         features: ["Todo lo incluído en Business", "Publicaciones ilimitadas", "Búsquedas activas ilimitadas", "Soporte prioritario", "Acceso prioritario a nuevas funcionalidades"]
     },
 ];
-
+ 
 const INTERES_RATES: Record<string, number> = {
     "1": 0, "3": 0.05, "6": 0.10, "12": 0.20
 };
-
+ 
 const UPGRADE_MAP: Record<string, { targetId: string; targetTitle: string; benefits: string[] } | null> = {
     "starter":    { targetId: "pro",        targetTitle: "PRO",        benefits: ["1 Voucher de certificación Hidden Security", "Acceso a futuros cursos publicados", "6 meses de acceso"] },
     "pro":        { targetId: "elite",      targetTitle: "ELITE",      benefits: ["2do Voucher en caso de no aprobar el primero", "12 meses de acceso"] },
@@ -58,7 +58,7 @@ const UPGRADE_MAP: Record<string, { targetId: string; targetTitle: string; benef
     "business":   { targetId: "enterprise", targetTitle: "ENTERPRISE", benefits: ["Publicaciones ilimitadas", "Búsquedas activas ilimitadas", "Soporte prioritario"] },
     "enterprise": null,
 };
-
+ 
 const ENTERPRISE_PLANS = ["business", "enterprise"];
 const USER_PLANS        = ["starter", "pro", "elite", "voucher"];
 const PLANS_WITHOUT_VOUCHER = ["starter"];
@@ -80,7 +80,7 @@ function getActivePlan(purchases: string[], purchaseExpiry: Record<string, strin
 
 // ─── Componente de bloqueo ─────────────────────────────────────────────────────
 function PurchaseBlockedBanner({ title, detail }: { title: string; detail: string }) {
-    /* const navigate = useNavigate(); */
+    const navigate = useNavigate();
     return (
         <div style={{
             minHeight: "100vh",
@@ -151,7 +151,6 @@ function PurchaseBlockedBanner({ title, detail }: { title: string; detail: strin
     );
 }
 
-// ─── Checkout ──────────────────────────────────────────────────────────────────
 const Checkout = () => {
     const { planId } = useParams();
     /* const navigate   = useNavigate();

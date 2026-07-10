@@ -9,40 +9,40 @@ import axios from "axios";
 import "./checkout.css";
 import Error from "../processMessages/Error";
 import Loader from "../loader/Loader";
-/* import useMercadoPago from "../hooks/useMercadoPago"; */
+import useMercadoPago from "../hooks/useMercadoPago";
 import CreditCard from "../ui/creditCard/CreditCard";
 import ProcessOk from "../processMessages/ProcessOk";
 
 const ALL_PLANS = [
     {
-        id: "starter", title: "STARTER", price: 80000, cuotas_sin_interes: 6,
+        id: "starter", title: "STARTER", price: 100000, cuotas_sin_interes: 6,
         label: "01 - TRAINING", period: "3 MESES DISPONIBLES",
-        features: ["Acceso completo al curso", "Material descargable", "Certificado de cursada"]
+        features: ["Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso"]
     },
     {
-        id: "pro", title: "PRO", price: 250000, cuotas_sin_interes: 6,
-        label: "02 - BEST_SELLER", period: "6 MESES DISPONIBLES",
-        features: ["1 Voucher de examen incluido", "Acceso a laboratorios", "Soporte prioritario"]
+        id: "pro", title: "PRO", price: 200000, cuotas_sin_interes: 6,
+        label: "02 - RECOMENDADO", period: "6 MESES DISPONIBLES",
+        features: ["1 Voucher de certificación Hidden Security", "Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso"]
     },
     {
-        id: "elite", title: "ELITE", price: 350000, cuotas_sin_interes: 6,
+        id: "elite", title: "ELITE", price: 300000, cuotas_sin_interes: 6,
         label: "03 - FULL_STACK", period: "12 MESES DISPONIBLES",
-        features: ["Beneficio de Re-intento", "Mentorship 1-to-1", "Acceso a Red de Empleo"]
+        features: ["Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso", "Voucher de certificación Hidden Security", "2do Voucher de certificación en caso de no aprobar el primero"]
     },
     {
-        id: "voucher", title: "VOUCHER", price: 180000, cuotas_sin_interes: 6,
+        id: "voucher", title: "CERTIFICACIÓN INDIVIDUAL", price: 150000, cuotas_sin_interes: 6,
         label: "04 - CERTIFICATION", period: "ÚNICO USO",
-        features: ["Derecho a examen final", "Certificación oficial", "Validez internacional"]
+        features: ["Un Intento de certificación Hidden Security", "Validación de conocimiento obtenido", "Título de certificación Hidden Security"]
     },
     {
-        id: "b2b_seis", title: "B2B_SEIS", price: 400000, cuotas_sin_interes: 6,
-        label: "01 // BUSINESS_CORE", period: "6 MESES",
-        features: ["Acceso a base de perfiles", "Filtros por habilidades", "3 Búsquedas activas", "Candidatos en dominio activo"]
+        id: "business", title: "BUSINESS", price: 900000, cuotas_sin_interes: 6,
+        label: "01 // BUSINESS", period: "6 MESES",
+        features: ["Acceso a base de datos de perfiles", "Búsqueda por habilidades, herramientas y certificaciones", "Publicación de ofertas laborales", "Contacto directo con candidatos", "Hasta 10 búsquedas activas"]
     },
     {
-        id: "b2b_doce", title: "B2B_DOCE", price: 700000, cuotas_sin_interes: 6,
-        label: "02 // ENTERPRISE_PRO", period: "12 MESES",
-        features: ["Publicaciones ilimitadas", "Estabilidad comercial extendida", "Continuidad en el ecosistema", "Soporte dedicado 24/7"]
+        id: "enterprise", title: "ENTERPRISE", price: 1500000, cuotas_sin_interes: 6,
+        label: "02 // ENTERPRISE: RECOMENDADO", period: "12 MESES",
+        features: ["Todo lo incluído en Business", "Publicaciones ilimitadas", "Búsquedas activas ilimitadas", "Soporte prioritario", "Acceso prioritario a nuevas funcionalidades"]
     },
 ];
 
@@ -51,15 +51,15 @@ const INTERES_RATES: Record<string, number> = {
 };
 
 const UPGRADE_MAP: Record<string, { targetId: string; targetTitle: string; benefits: string[] } | null> = {
-    "starter":  { targetId: "pro",      targetTitle: "PRO",      benefits: ["1 Voucher de examen incluido", "Acceso a laboratorios", "Soporte prioritario"] },
-    "pro":      { targetId: "elite",    targetTitle: "ELITE",    benefits: ["Beneficio de re-intento en examen", "Mentorship 1-to-1", "Acceso a Red de Empleo"] },
-    "elite":    null,
-    "voucher":  null,
-    "b2b_seis": { targetId: "b2b_doce", targetTitle: "B2B_DOCE", benefits: ["Publicaciones ilimitadas", "Continuidad en el ecosistema", "Soporte dedicado 24/7"] },
-    "b2b_doce": null,
+    "starter":    { targetId: "pro",        targetTitle: "PRO",        benefits: ["1 Voucher de certificación Hidden Security", "Acceso a futuros cursos publicados", "6 meses de acceso"] },
+    "pro":        { targetId: "elite",      targetTitle: "ELITE",      benefits: ["2do Voucher en caso de no aprobar el primero", "12 meses de acceso"] },
+    "elite":      null,
+    "voucher":    null,
+    "business":   { targetId: "enterprise", targetTitle: "ENTERPRISE", benefits: ["Publicaciones ilimitadas", "Búsquedas activas ilimitadas", "Soporte prioritario"] },
+    "enterprise": null,
 };
 
-const ENTERPRISE_PLANS = ["b2b_seis", "b2b_doce"];
+const ENTERPRISE_PLANS = ["business", "enterprise"];
 const USER_PLANS        = ["starter", "pro", "elite", "voucher"];
 const PLANS_WITHOUT_VOUCHER = ["starter"];
 const VOUCHER_PLAN = ALL_PLANS.find(p => p.id === "voucher")!;
@@ -151,10 +151,11 @@ function PurchaseBlockedBanner({ title, detail }: { title: string; detail: strin
     );
 }
 
+// ─── Checkout ──────────────────────────────────────────────────────────────────
 const Checkout = () => {
     const { planId } = useParams();
-    /* const navigate   = useNavigate();
-    const mp         = useMercadoPago(); */
+    const navigate   = useNavigate();
+    const mp         = useMercadoPago();
     const [idempotencyKey] = useState(v4());
     const { theme }  = UseTheme();
     const { user }   = UseSession();

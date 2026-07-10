@@ -15,32 +15,37 @@ const Pricing = () => {
     }, []);
 
     const handlePurchase = (planTitle: string) => {
-        const planId = planTitle.toLowerCase();
-        navigate(`/checkout/${planId}`);
+    const planMap: Record<string, string> = {
+        "CERTIFICACIÓN INDIVIDUAL": "voucher",
     };
+    const planId = planMap[planTitle] ?? planTitle.toLowerCase();
+    navigate(`/checkout/${planId}`);
+};
 
     const studentPlans = [
-        { title: "STARTER", price: "80.000", period: "3 MESES DISPONIBLES", features: ["Acceso completo al curso", "Material descargable", "Certificado de cursada"], label: "01 - TRAINING", cuotas: 3 },
-        { title: "PRO", price: "250.000", period: "6 MESES DISPONIBLES", features: ["1 Voucher de examen incluido", "Acceso a laboratorios", "Soporte prioritario"], label: "02 - BEST_SELLER", highlight: true, cuotas: 3},
-        { title: "ELITE", price: "350.000", period: "12 MESES DISPONIBLES", features: ["Beneficio de Re-intento", "Mentorship 1-to-1", "Acceso a Red de Empleo"], label: "03 - FULL_STACK", cuotas: 3 },
-        { title: "VOUCHER", price: "180.000", period: "UNICO USO", features: ["Derecho a examen final", "Certificación oficial", "Validez internacional"], label: "04 - CERTIFICATION", cuotas: 3 }
+        { title: "STARTER", price: "100.000", desc: "Ideal para comenzar tu formación y desarrollar las habilidades necesarias para iniciar una carrera en ciberseguridad.", period: "3 MESES DISPONIBLES", features: ["Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso"], label: "01 - TRAINING", cuotas: 3 },
+        { title: "PRO", price: "200.000", desc: "La mejor opción para quienes buscan prepararse y validar sus habilidades.",period: "6 MESES DISPONIBLES", features: ["1 Voucher de certificación Hidden Security", "Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso"], label: "02 - RECOMENDADO", highlight: true, cuotas: 3},
+        { title: "ELITE", price: "300.000", desc: "La experiencia más completa para quienes desean aprovechar al máximo el ecosistema de Hidden Security.", period: "12 MESES DISPONIBLES", features: ["Acceso a todos los cursos", "Acceso a futuros cursos publicados", "Certificado de finalización de curso", "Voucher de certificación Hidden Security", "2do Voucher de certificación en caso de no aprobar el primero"], label: "03 - FULL_STACK", cuotas: 3 },
+        { title: "CERTIFICACIÓN INDIVIDUAL", desc: "Si ya contás con los conocimientos necesarios, podés rendir la certificación sin necesidad de realizar nuestros cursos.", price: "150.000", period: "UNICO USO", features: ["Un Intento de certificación Hidden Security", "Validación de conocimiento obtenido", "Título de certificacion Hidden Security"], label: "04 - CERTIFICATION", cuotas: 3 }
     ];
 
     const businessPlans = [
         { 
-            title: "B2B_SEIS", 
-            price: "400.000", 
-            period: "6 MESES", 
-            features: ["Acceso a base de perfiles", "Filtros por habilidades", "3 Búsquedas activas", "Candidatos en dominio activo"],
-            label: "01 // BUSINESS_CORE",
+            title: "BUSINESS", // B2B_SEIS
+            price: "900.000", 
+            period: "6 MESES",
+            desc: "Ideal para empresas que buscan incorporar talento especializado en ciberseguridad.", 
+            features: ["Acceso a base de datos de perfiles", "Búsqueda por habilidades, herramientas y certificaciones", "Publicación de ofertas laborales", "Contacto directo con candidatos", "Hasta 10 busquedas activas"],
+            label: "01 // BUSINESS",
             cuotas: 3
         },
         { 
-            title: "B2B_DOCE", 
-            price: "700.000", 
+            title: "ENTERPRISE", // B2B_DOCE
+            price: "1.500.000", 
             period: "12 MESES", 
-            features: ["Publicaciones ilimitadas", "Estabilidad comercial extendida", "Continuidad en el ecosistema", "Soporte dedicado 24/7"],
-            label: "02 // ENTERPRISE_PRO",
+            desc: "Para organizaciones con procesos de selección continuos.",
+            features: ["Todo lo incluído en Business", "Publicaciones ilimitadas", "Busquedas activas ilimitadas", "Soporte prioritario", "Acceso prioritario a nuevas funcionalidades"],
+            label: "02 // ENTERPRISE: RECOMENDADO",
             highlight: true,
             cuotas: 3
         }
@@ -101,6 +106,8 @@ const Pricing = () => {
                                     </div>
                                     <span className="plan-period Montserrat-700">// {plan.period}</span>
                                 </div>
+
+                                <p className="plan-desc">{plan.desc}</p>
                                 
                                 <ul className="plan-features">
                                     {plan.features.map((f, idx) => (
@@ -111,7 +118,7 @@ const Pricing = () => {
                                 </ul>
 
                                 <button className="plan-cta Montserrat-900" onClick={() => handlePurchase(plan.title)}>
-                                    {plan.title === "VOUCHER" ? "ADQUIRIR_EXAMEN" : "COMPRAR"}
+                                    {plan.title === "CERTIFICACIÓN INDIVIDUAL" ? "ADQUIRIR_EXAMEN" : "COMPRAR"}
                                 </button>
                                 
                                 {plan.highlight && <div className="highlight-glow" />}

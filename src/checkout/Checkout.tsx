@@ -80,7 +80,7 @@ function getActivePlan(purchases: string[], purchaseExpiry: Record<string, strin
 
 // ─── Componente de bloqueo ─────────────────────────────────────────────────────
 function PurchaseBlockedBanner({ title, detail }: { title: string; detail: string }) {
-    const navigate = useNavigate();
+    /* const navigate = useNavigate(); */
     return (
         <div style={{
             minHeight: "100vh",

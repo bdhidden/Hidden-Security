@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { UseTheme } from "../contexts/ThemeContext";
-import "./usersDatabase.css";
+import "./usersDataBase.css";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface PersonalInfo {

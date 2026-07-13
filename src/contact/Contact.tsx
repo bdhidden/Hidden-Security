@@ -49,7 +49,7 @@ const Contact = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <img className='contact-logo' src="/logos/hidden-logo-sf.png" alt="hidden-logo" />
+                        <img className='contact-logo' src="/logos/logo-hidden-final.png" alt="hidden-logo" />
                         <span className="h-label-mono">// CANAL OFICIAL</span>
                         
                         <h1 className="h-massive-title Montserrat-900">

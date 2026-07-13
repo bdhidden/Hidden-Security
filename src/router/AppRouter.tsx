@@ -20,6 +20,8 @@ import CookieBanner from "../cookies/CookiesCorporate";
 import PoliticaCookies from "../cookies/PoliticaCookies";
 import Error404Minimal from "../processMessages/Error404Minimal";
 import ProcessOk from "../processMessages/ProcessOk";
+import Certifications from "../certifications/Certifications";
+import CertificationsRelative from "../certifications/CertificationsRelative";
 
 const AppRouter = () => {
     return (
@@ -44,6 +46,8 @@ const AppRouter = () => {
                                 <Route path="/dashboard" element={<PrivateRoute adminOnly={false}><UserDashboard /></PrivateRoute>} />
                                 <Route path="/admin" element={<PrivateRoute adminOnly={true}><AdminDashboard /></PrivateRoute>} />
                                 <Route path="/enterprise" element={<PrivateRoute enterpriseOnly={true}><EnterpriseDashboard /></PrivateRoute>} /> 
+                                <Route path="/certifications"           element={<Certifications />} />
+                                <Route path="/certifications/:certSlug" element={<CertificationsRelative />} />
                                 <Route path="/*" element={<Error404Minimal />} />
                             </Routes>
                             <FooterMinimal />

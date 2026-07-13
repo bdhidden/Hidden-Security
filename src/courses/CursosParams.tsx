@@ -73,7 +73,7 @@ const CursosParams = () => {
                             <h1 className="h-massive-title Montserrat-900">
                                 NUESTRAS <span className="h-outline">CURSOS</span>
                             </h1>
-                            <img className='hidden-logo-cursos' src="/logos/hidden-logo-sf.png" alt="hidden-logo" />
+                            <img className='hidden-logo-cursos' src="/logos/logo-hidden-final.png" alt="hidden-logo" />
                         </div>
                         <span className="h-label-mono">Aprendé las habilidades que demanda la industria.</span>    
                         <div className="h-intro-p">

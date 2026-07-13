@@ -101,6 +101,7 @@ const NavBarMinimal = () => {
                             <li><a href="/pricing"><span className="index">03</span> Precios</a></li>
                             {/* <li><a href="/raffles"><span className="index">03</span> Sorteos</a></li> */}
                             <li><a href="/contact"><span className="index">04</span> Contacto</a></li>
+                            <li><a href="/certifications"><span className="index">04</span> Certificaciones</a></li>
                             {user && user.admin !== true && user.isEnterprise !== true &&(
                                 <li>
                                     <a href="/dashboard" className="nav-link-special">

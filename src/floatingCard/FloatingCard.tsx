@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import Card from './Card';
-import logoHidden from "/logos/hidden-logo-sf.png"; 
+import logoHidden from "/logos/logo-hidden-final.png"; 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import './floatingCard.css';
 import { UseTheme } from '../contexts/ThemeContext';

@@ -43,7 +43,8 @@ const NavBarMobileMinimal = forwardRef(({ closeMenu, /* texts, language, */ them
                     { label: "Cursos", href: "/courses-info", index: "02" },
                     { label: "Empresa", href: "/company", index: "03" },
                     { label: "Precios", href: "/pricing", index: "04" },
-                    { label: "Contacto", href: "/contact", index: "05" }
+                    { label: "Contacto", href: "/contact", index: "05" },
+                    { label: "Certificaciones", href: "/certifications", index: "06" }
                 ].map((item, idx) => (
                     <a key={idx} href={item.href} className="kaleida-mobile-item" onClick={closeMenu}>
                         <span className="item-index">{item.index}</span>
@@ -53,19 +54,19 @@ const NavBarMobileMinimal = forwardRef(({ closeMenu, /* texts, language, */ them
                 
                 {user && user.admin !== true && user.isEnterprise !== true && (
                     <a href="/dashboard" onClick={closeMenu} className="kaleida-mobile-item special">
-                        <span className="item-index">06</span>
+                        <span className="item-index">07</span>
                         <span className="item-label">DASHBOARD</span>
                     </a>
                 )}
                 {user && user.admin === true &&(
                     <a href="/admin" onClick={closeMenu} className="kaleida-mobile-item special">
-                        <span className="item-index">06</span>
+                        <span className="item-index">07</span>
                         <span className="item-label">ADMIN</span>
                     </a>
                 )}
                 {user && user.isEnterprise === true && user.admin !== true &&(
                     <a href="/enterprise" onClick={closeMenu} className="kaleida-mobile-item special">
-                        <span className="item-index">06</span>
+                        <span className="item-index">07</span>
                         <span className="item-label">DASHBOARD EMPRESA</span>
                     </a>
                 )}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { UseTheme } from "../contexts/ThemeContext";
-import "./usersDataBase.css";
+import "./usersDatabase.css";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface PersonalInfo {
@@ -44,7 +44,7 @@ interface WorkPreferences {
 }
 
 interface CandidateCV {
-  userId:                  string;
+  id:                      string;
   personalInfo:            PersonalInfo;
   skills:                  string[];
   experience:              ExperienceItem[];
@@ -337,7 +337,7 @@ function CandidateDetail({ candidate, onDownload }: { candidate: CandidateCV; on
       {candidate.skillsCertifiedByHidden.some(s => !candidate.skills.includes(s)) && (
         <div className="udb-detail-section">
           <span className="udb-detail-section-title udb-detail-section-title--gold">
-            // CERTIFICACIONES ADICIONALES OBTENIDAS (no declaradas por el candidato en el CV)
+            // CERTIFICACIONES ADICIONALES (no declaradas por el candidato)
           </span>
           <div className="udb-skills-row">
             {candidate.skillsCertifiedByHidden
@@ -782,12 +782,12 @@ export default function UsersDatabase() {
         </div>
       ) : (
         <div className="udb-list">
-          {candidates.map(c => (
+          {candidates.map((c) => (
             <CandidateRow
-              key={c.userId}
+              key={c.id}
               candidate={c}
-              isExpanded={expandedId === c.userId}
-              onToggle={() => setExpandedId(expandedId === c.userId ? null : c.userId)}
+              isExpanded={expandedId === c.id}
+              onToggle={() => setExpandedId(expandedId === c.id ? null : c.id)}
               onDownload={handleDownload}
             />
           ))}

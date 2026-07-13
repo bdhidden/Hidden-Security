@@ -43,8 +43,8 @@ const NavBarMobileMinimal = forwardRef(({ closeMenu, /* texts, language, */ them
                     { label: "Cursos", href: "/courses-info", index: "02" },
                     { label: "Empresa", href: "/company", index: "03" },
                     { label: "Precios", href: "/pricing", index: "04" },
-                    { label: "Contacto", href: "/contact", index: "05" },
-                    { label: "Certificaciones", href: "/certifications", index: "06" }
+                    { label: "Certificaciones", href: "/certifications", index: "05" },
+                    { label: "Contacto", href: "/contact", index: "06" }
                 ].map((item, idx) => (
                     <a key={idx} href={item.href} className="kaleida-mobile-item" onClick={closeMenu}>
                         <span className="item-index">{item.index}</span>

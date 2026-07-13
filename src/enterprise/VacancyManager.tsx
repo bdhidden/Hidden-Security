@@ -805,17 +805,6 @@ export default function VacancyManager() {
       {showModal && (
         <VacancyModal initial={editingVacancy} onSave={handleSave} onClose={closeModal} />
       )}
-
-      {/* Toast */}
-   {/*    {toast && (
-        <div className={`hs-toast hs-toast--${toast.type}`}>
-          <span className="hs-terminal-text hs-terminal-text--sm">
-            {toast.type === "success" ? "// OK" : "// ERROR"}
-          </span>
-          {toast.msg}
-        </div>
-      )} */}
-
     </div>
   );
 }

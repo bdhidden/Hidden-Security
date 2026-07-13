@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UseTheme } from "../contexts/ThemeContext";
@@ -167,6 +167,10 @@ const Checkout = () => {
     const [error,         setError]         = useState<string | null>(null);
     const [status,        setStatus]        = useState<string>("");
     const [voucherAdded,  setVoucherAdded]  = useState(false);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const [formData, setFormData] = useState({
         nombre: "", email: user?.email || "", telefono: "", dni: "",

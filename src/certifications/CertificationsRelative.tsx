@@ -138,7 +138,7 @@ const CertificationsRelative = () => {
         <section className="cr-section cr-section--accent">
           <span className="cr-label-mono">03 // EMPLEABILIDAD</span>
           <h2 className="cr-section-title">
-            CERTIFICACIÓN Y <span className="cr-accent">BOLSA_HIDDEN</span>
+            CERTIFICACIÓN Y BOLSA DE TRABAJO <span className="cr-accent">HIDDEN SECURITY</span>
           </h2>
           <p className="cr-p">
             Quienes obtengan la certificación podrán formar parte de la bolsa de talento de Hidden Security,

@@ -121,11 +121,11 @@ export const SessionProvider = ({ children }: ProviderProps) => {
             const attempts   = serverData?.attempts;
 
             // ── Email no verificado ────────────────────────────────────────────
-            if (serverCode === "auth/email-not-verified") {
+            /* if (serverCode === "auth/email-not-verified") {
                 setEmailNotVerified(true);
                 setError("Verificá tu email antes de ingresar. Revisá tu casilla de correo.");
                 return;
-            }
+            } */
 
             // ── Email no registrado ────────────────────────────────────────────
             if (serverCode === "auth/user-not-found" || error.response?.status === 404) {

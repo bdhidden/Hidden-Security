@@ -77,6 +77,7 @@ export const SessionProvider = ({ children }: ProviderProps) => {
             }
         } catch (error: any) {
             if(error.response?.status === 409){
+                setLoading(false)
                 setError(true)
                 return
             }
@@ -101,6 +102,8 @@ export const SessionProvider = ({ children }: ProviderProps) => {
                 const { user, isAdmin, isEnterprise } = response.data;
                 const mergedUser = { ...user, isEnterprise, admin: isAdmin };
                 setUser(mergedUser);
+
+                setLoading(false);
 
                 if (isAdmin) {
                     navigate("/admin");

@@ -71,6 +71,7 @@ export const SessionProvider = ({ children }: ProviderProps) => {
             setLoading(true)
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/register`, { email, password })
             if(response.status === 201){
+                setLoading(false)
                 registerOpen(false)
                 loginOpen(true)
             }
@@ -80,9 +81,7 @@ export const SessionProvider = ({ children }: ProviderProps) => {
                 return
             }
             setError(true)
-        } finally {
-            setLoading(false)
-        }
+        } 
     }
 
     // Login
